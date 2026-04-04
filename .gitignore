@@ -1,0 +1,19 @@
+# Generated output files (created by build scripts or CI pipeline)
+output/
+
+# Local build directory
+build/
+
+# Preview images in root (temporary)
+preview_*.png
+
+# Temporary files
+tmpclaude-*
+*.tmp
+
+# STL and PNG are generated - never commit
+*.stl
+*.png
+
+# Exception: Keep source images if any exist in assets/
+!assets/*.png

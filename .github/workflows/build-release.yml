@@ -1,0 +1,102 @@
+name: Build STLs and Release
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install OpenSCAD
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad xvfb
+
+      - name: Find SCAD files and build STLs and images
+        run: |
+          mkdir -p output/stl output/images
+
+          find . -name "*.scad" -type f | while read -r scad_file; do
+            base_name=$(basename "$scad_file" .scad)
+
+            echo "Processing: $scad_file"
+
+            echo "  Building STL..."
+            xvfb-run -a openscad -o "output/stl/${base_name}.stl" "$scad_file"
+
+            echo "  Rendering front view..."
+            xvfb-run -a openscad -o "output/images/${base_name}_front.png" \
+              --camera=0,0,0,55,0,45,0 \
+              --autocenter --viewall \
+              --imgsize=1024,1024 \
+              --colorscheme=Tomorrow \
+              "$scad_file"
+
+            echo "  Rendering rear view..."
+            xvfb-run -a openscad -o "output/images/${base_name}_rear.png" \
+              --camera=0,0,0,55,0,225,0 \
+              --autocenter --viewall \
+              --imgsize=1024,1024 \
+              --colorscheme=Tomorrow \
+              "$scad_file"
+
+            echo "  Done with $base_name"
+          done
+
+          echo ""
+          echo "Generated STL files:"
+          ls -la output/stl/ || echo "No STL files generated"
+          echo ""
+          echo "Generated images:"
+          ls -la output/images/ || echo "No images generated"
+
+      - name: Check for output files
+        id: check_files
+        run: |
+          if [ -n "$(ls -A output/stl/*.stl 2>/dev/null)" ]; then
+            echo "has_files=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_files=false" >> $GITHUB_OUTPUT
+            echo "No SCAD files found in repository, skipping release"
+          fi
+
+      - name: Delete existing release
+        if: steps.check_files.outputs.has_files == 'true'
+        run: |
+          gh release delete latest --yes || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release (as draft)
+        if: steps.check_files.outputs.has_files == 'true'
+        run: |
+          gh release create latest \
+            --title "Latest Build" \
+            --notes "Automated build of STL files and preview images from OpenSCAD sources.
+
+          ## Contents
+          - **STL files**: Ready-to-print 3D models
+          - **Images**: Preview renders from front and rear angles
+
+          Built from commit: ${{ github.sha }}" \
+            --draft \
+            output/stl/*.stl \
+            output/images/*.png
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish release (set as not draft)
+        if: steps.check_files.outputs.has_files == 'true'
+        run: |
+          gh release edit latest --draft=false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
