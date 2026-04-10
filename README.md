@@ -8,35 +8,32 @@ A parametric, unibody 10-inch server rack designed to 3D print in a single piece
 - **Prints in one piece** - no assembly required
 - **No supports needed** - all geometry is self-supporting when printed face-down
 - **Rounded exterior edges** for clean aesthetics and handling comfort
-- **Handle cutouts** on both sides for easy carrying
+- **M6 nut traps** with diamond bevels for captive hardware
+- **Grip bars** and filleted handle cutouts for comfortable carrying
 - **Open back** for ventilation and cable management
 - **Parametric design** - easily adjust rack units, depth, wall thickness
 
-## Specifications
-
-| Parameter | Value |
-|-----------|-------|
-| Rack Units | 6U |
-| Panel Width | 254mm (10") |
-| Outer Dimensions | 264 x 276.7 x 200mm |
-| Wall Thickness | 5mm |
-| Mount Holes | M6 / #12-24 clearance (6.5mm) |
-| Hole Spacing | EIA-310 standard |
-| Print Footprint | 264 x 276.7mm |
-
 ## Designs
 
-### Rack (6U)
+### Just a Rack (6U)
 
 | Front View | Rear View |
 |------------|-----------|
-| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack_rear.png) |
+| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack_rear.png) |
 
-Unibody 6U 10-inch server rack with rounded edges and side handle cutouts. Designed for support-free FDM printing on the Bambu Labs H2D.
+Unibody 6U 10-inch server rack with M6 nut traps, 18mm grip bars, filleted handle cutouts, and 30mm deep mounting rails. Prints support-free on the Bambu Labs H2D.
 
-**Documentation**: [rack.md](rack.md)
+**Download STL**: [just-a-rack.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack.stl)
 
-**Download STL**: [rack.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack.stl)
+### Rack with Cubbies (6U)
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies_rear.png) |
+
+Same rack with a 55mm cubby extension on the right side featuring horizontal shelves every 4 inches for accessory storage.
+
+**Download STL**: [rack-with-cubbies.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies.stl)
 
 ## Print Instructions
 
