@@ -206,6 +206,16 @@ Each documentation file must contain:
 - Print settings and assembly notes
 - Changelog
 
+### Hardware Component References
+
+Standalone reference docs for external hardware integrated into designs (dimensions, mounting hole patterns, cable clearances, authoritative vendor sources) live alongside the SCAD files:
+
+| Component | Reference File |
+|-----------|----------------|
+| Waveshare 7inch HDMI LCD (B) | `waveshare-7inch-lcd-display-b.md` |
+
+Consult these before designing any mount, case, or bezel that integrates the listed hardware — all dimensions are verified against the vendor's mechanical drawings.
+
 ---
 
 ## 6. Build Scripts and Generated Files

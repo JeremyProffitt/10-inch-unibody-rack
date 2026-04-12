@@ -25,6 +25,16 @@ Unibody 6U 10-inch server rack with M6 nut traps, 18mm grip bars, filleted handl
 
 **Download STL**: [just-a-rack.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack.stl)
 
+### Just a Rack with Pocket (6U)
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-with-pocket_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-with-pocket_rear.png) |
+
+Same rack with a USW Flex Mini pocket on the right interior wall. Includes a 45-degree support ramp and triangular cable routing cutout for support-free printing.
+
+**Download STL**: [just-a-rack-with-pocket.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-with-pocket.stl)
+
 ### Rack with Cubbies (6U)
 
 | Front View | Rear View |
@@ -34,6 +44,16 @@ Unibody 6U 10-inch server rack with M6 nut traps, 18mm grip bars, filleted handl
 Same rack with a 55mm cubby extension on the right side featuring horizontal shelves every 4 inches for accessory storage.
 
 **Download STL**: [rack-with-cubbies.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies.stl)
+
+### Rack with Cubbies and Pocket (6U)
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies-with-pocket_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies-with-pocket_rear.png) |
+
+Cubby rack with a USW Flex Mini pocket on the divider wall between the rack interior and cubbies. Combines storage cubbies with the built-in switch pocket.
+
+**Download STL**: [rack-with-cubbies-with-pocket.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies-with-pocket.stl)
 
 ## Print Instructions
 
