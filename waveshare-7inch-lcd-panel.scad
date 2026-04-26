@@ -45,8 +45,12 @@ panel_thickness_mm      = wall_thickness_mm;                          // 5.0
 // LCD bezel window (rectangular cutout in front face)
 // NOTE: Conservative size below the VA (154.58 x 86.42 mm) to keep the M3
 // screw holes clear of the window edge. Refine to taste after mockup.
-lcd_window_width_mm     = 150.00;
-lcd_window_height_mm    = 85.00;
+lcd_window_width_mm     = 156.00;
+lcd_window_height_mm    = 87.00;
+
+// Window offset from centered position (positive = right/up, negative = left/down)
+lcd_window_offset_x_mm  = -4.00;
+lcd_window_offset_y_mm  =  3.00;
 
 // LCD mounting boss (cylindrical standoff on the back of the panel)
 // Length = LCD module thickness minus PCB thickness, so the PCB back lands
@@ -97,9 +101,9 @@ lcd_hole_positions = [
      lcd_pcb_y0_mm + lcd_pcb_height_mm - lcd_hole_inset_y_mm]
 ];
 
-// LCD window cutout (centered on panel)
-lcd_window_x0_mm = (panel_width_mm  - lcd_window_width_mm)  / 2;
-lcd_window_y0_mm = (panel_height_mm - lcd_window_height_mm) / 2;
+// LCD window cutout (centered on panel, plus offset)
+lcd_window_x0_mm = (panel_width_mm  - lcd_window_width_mm)  / 2 + lcd_window_offset_x_mm;
+lcd_window_y0_mm = (panel_height_mm - lcd_window_height_mm) / 2 + lcd_window_offset_y_mm;
 
 // --- Print fit assertions ---
 assert(panel_width_mm <= printer_max_x_mm,
