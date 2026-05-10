@@ -11,9 +11,6 @@
 
 include <all-racks-config.scad>
 
-// Override depth to 320mm (uses near-full H2D Z capacity of 325mm)
-rack_depth_mm = 320.0;
-
 // =========================================
 // USW FLEX MINI POCKET (right wall, bottom)
 // =========================================

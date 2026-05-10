@@ -17,6 +17,11 @@ for scad_file in *.scad; do
     # Get filename without extension
     name="${scad_file%.scad}"
 
+    # Skip shared config files — not standalone parts
+    if [[ "$name" == "all-racks-config" ]]; then
+        continue
+    fi
+
     echo ""
     echo "=== Processing ${name} ==="
 

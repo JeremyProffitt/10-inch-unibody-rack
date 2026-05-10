@@ -1,0 +1,35 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install OpenSCAD
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad xvfb
+
+      - name: Build STLs and PNGs
+        run: xvfb-run -a bash build.sh
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "output/stl/*.stl,output/images/*.png"
+          tag: latest
+          name: Latest Build
+          allowUpdates: true
+          replacesArtifacts: true
+          makeLatest: true
+          token: ${{ secrets.GITHUB_TOKEN }}

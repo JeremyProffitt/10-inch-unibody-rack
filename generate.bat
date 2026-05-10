@@ -11,29 +11,32 @@ if not exist %OUTPUT_DIR%\images mkdir %OUTPUT_DIR%\images
 
 REM Process all SCAD files
 for %%f in (*.scad) do (
-    echo.
-    echo === Processing %%~nf ===
+    REM Skip shared config files - not standalone parts
+    if not "%%~nf"=="all-racks-config" (
+        echo.
+        echo === Processing %%~nf ===
 
-    echo   Building STL...
-    %OPENSCAD% -o %OUTPUT_DIR%\stl\%%~nf.stl "%%f"
+        echo   Building STL...
+        %OPENSCAD% -o %OUTPUT_DIR%\stl\%%~nf.stl "%%f"
 
-    echo   Rendering front view...
-    %OPENSCAD% -o %OUTPUT_DIR%\images\%%~nf_front.png ^
-        --camera=0,0,0,55,0,45,0 ^
-        --autocenter --viewall ^
-        --imgsize=1024,1024 ^
-        --colorscheme=Tomorrow ^
-        "%%f"
+        echo   Rendering front view...
+        %OPENSCAD% -o %OUTPUT_DIR%\images\%%~nf_front.png ^
+            --camera=0,0,0,55,0,45,0 ^
+            --autocenter --viewall ^
+            --imgsize=1024,1024 ^
+            --colorscheme=Tomorrow ^
+            "%%f"
 
-    echo   Rendering rear view...
-    %OPENSCAD% -o %OUTPUT_DIR%\images\%%~nf_rear.png ^
-        --camera=0,0,0,55,0,225,0 ^
-        --autocenter --viewall ^
-        --imgsize=1024,1024 ^
-        --colorscheme=Tomorrow ^
-        "%%f"
+        echo   Rendering rear view...
+        %OPENSCAD% -o %OUTPUT_DIR%\images\%%~nf_rear.png ^
+            --camera=0,0,0,55,0,225,0 ^
+            --autocenter --viewall ^
+            --imgsize=1024,1024 ^
+            --colorscheme=Tomorrow ^
+            "%%f"
 
-    echo   Done with %%~nf
+        echo   Done with %%~nf
+    )
 )
 
 echo.

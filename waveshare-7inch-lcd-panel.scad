@@ -46,11 +46,20 @@ panel_thickness_mm      = wall_thickness_mm;                          // 5.0
 // NOTE: Conservative size below the VA (154.58 x 86.42 mm) to keep the M3
 // screw holes clear of the window edge. Refine to taste after mockup.
 lcd_window_width_mm     = 156.00;
-lcd_window_height_mm    = 87.00;
+lcd_window_height_mm    = 89.00;
 
 // Window offset from centered position (positive = right/up, negative = left/down)
-lcd_window_offset_x_mm  = -4.00;
-lcd_window_offset_y_mm  =  3.00;
+lcd_window_offset_x_mm  =  1.00;
+lcd_window_offset_y_mm  =  4.00;
+
+// LCD window bevel: the cutout tapers from (lcd_window_* + 2*bevel) at the
+// FRONT face (Z=0) inward to lcd_window_* at the BACK face. Visually this
+// flares the front opening outward toward the viewer for a wider sightline
+// onto the LCD. Printability (face-down): the cutout NARROWS with Z, so the
+// panel material extends inward over the layer below -- a mild overhang of
+// atan(bevel / panel_thickness). At 3 mm / 5 mm = ~31 deg from vertical,
+// inside the 45 deg unsupported limit on the Bambu H2D.
+lcd_window_bevel_mm     = 3.00;
 
 // LCD mounting boss (cylindrical standoff on the back of the panel)
 // Length = LCD module thickness minus PCB thickness, so the PCB back lands
@@ -63,6 +72,15 @@ lcd_boss_length_mm      = lcd_module_thickness_mm - lcd_pcb_thickness_mm;  // 6.
 // the front face of the panel.
 lcd_screw_inset_diameter_mm = 5.00;
 lcd_screw_inset_depth_mm    = 2.00;
+
+// Centering pins (test fit). When enabled, solid 2.5 mm dia x 5 mm posts
+// protrude from the tip of each LCD mounting boss, sized to slip into the
+// LCD's Ø3.25 mounting holes for a no-screw alignment dry-fit. When enabled
+// the M3 through-holes are NOT subtracted (the post must be solid through
+// the boss). Set false for the production part.
+enable_centering_pins         = true;
+lcd_centering_pin_diameter_mm = 2.50;
+lcd_centering_pin_length_mm   = 5.00;
 
 // Uniform 1 mm corner rounding on every transition.
 // Applied via minkowski() with a sphere so ALL edges (Z-parallel AND the front
@@ -137,24 +155,62 @@ module panel_slab() {
 }
 
 /**
- * LCD Window Cutout
+ * LCD Window Cutout (beveled, flared toward front)
  *
- * Rectangular through-hole with the 4 Z-parallel (vertical) corners filleted
- * by a 1 mm radius via minkowski() with a short cylinder. The cutout extends
- * 1 mm past the plate on both Z faces so the boolean subtract is clean and
- * no coincident-face slivers remain at Z=0 or Z=T.
+ * Tapered through-hole. Cross-section at the FRONT face (Z=0) is expanded by
+ * lcd_window_bevel_mm on every side; cross-section at the BACK face
+ * (Z=panel_thickness) is the nominal lcd_window_*_mm rectangle (matching the
+ * LCD glass it sits against). The bevel is a linear taper between the two,
+ * formed by hull()-ing a thin slice at each face.
  *
- * Note: the front/back face transitions of the cutout are intentionally left
- * at 90 deg. Rounding them (sphere minkowski) caused CSG artifacts because
- * the rounded cutout ends exactly on the plate's face planes.
+ * Both faces' Z-parallel corners are filleted to corner_radius_mm via
+ * minkowski() with a short cylinder. Front and back extension blocks (1 mm
+ * past each face) ensure clean boolean subtraction with no coincident-face
+ * slivers.
+ *
+ * Printability (face-down): the cutout NARROWS with Z. Panel material
+ * extends inward over the layer below -- a mild overhang of
+ * atan(bevel / panel_thickness). At 3 mm / 5 mm = ~31 deg from vertical,
+ * within the 45 deg unsupported limit on the Bambu H2D.
  */
 module lcd_window_cutout() {
     r = corner_radius_mm;
-    translate([lcd_window_x0_mm + r, lcd_window_y0_mm + r, -1])
+    b = lcd_window_bevel_mm;
+
+    // Beveled taper: hull of a thin large slice at the front face and a thin
+    // small slice at the back face -> linear cross-section interpolation in Z.
+    hull() {
+        translate([lcd_window_x0_mm - b + r, lcd_window_y0_mm - b + r, 0])
+            minkowski() {
+                cube([lcd_window_width_mm  + 2 * b - 2 * r,
+                      lcd_window_height_mm + 2 * b - 2 * r,
+                      0.001]);
+                cylinder(r = r, h = 0.001, $fn = corner_sphere_fn);
+            }
+        translate([lcd_window_x0_mm + r, lcd_window_y0_mm + r, panel_thickness_mm - 0.001])
+            minkowski() {
+                cube([lcd_window_width_mm  - 2 * r,
+                      lcd_window_height_mm - 2 * r,
+                      0.001]);
+                cylinder(r = r, h = 0.001, $fn = corner_sphere_fn);
+            }
+    }
+
+    // Front extension below Z=0 (large cross-section, matches front face)
+    translate([lcd_window_x0_mm - b + r, lcd_window_y0_mm - b + r, -1])
+        minkowski() {
+            cube([lcd_window_width_mm  + 2 * b - 2 * r,
+                  lcd_window_height_mm + 2 * b - 2 * r,
+                  1.001]);
+            cylinder(r = r, h = 0.001, $fn = corner_sphere_fn);
+        }
+
+    // Back extension above Z=panel_thickness (small cross-section, matches back face)
+    translate([lcd_window_x0_mm + r, lcd_window_y0_mm + r, panel_thickness_mm])
         minkowski() {
             cube([lcd_window_width_mm  - 2 * r,
                   lcd_window_height_mm - 2 * r,
-                  panel_thickness_mm + 2]);
+                  1.001]);
             cylinder(r = r, h = 0.001, $fn = corner_sphere_fn);
         }
 }
@@ -223,6 +279,27 @@ module lcd_screw_holes() {
 }
 
 /**
+ * LCD Centering Pins (test fit)
+ *
+ * Solid posts at each LCD mounting hole position, protruding from the boss
+ * tip outward (back of panel) by lcd_centering_pin_length_mm. Diameter is
+ * sized to slip into the LCD's Ø3.25 mounting holes for a no-screw dry fit
+ * to verify hole alignment with the LCD PCB.
+ *
+ * NOTE: When enable_centering_pins is true, lcd_screw_holes() is skipped in
+ * the assembly so the post remains solid through the boss.
+ */
+module lcd_centering_pins() {
+    boss_tip_z = panel_thickness_mm + lcd_boss_length_mm;
+    for (p = lcd_hole_positions) {
+        translate([p[0], p[1], boss_tip_z])
+            cylinder(
+                h = lcd_centering_pin_length_mm,
+                d = lcd_centering_pin_diameter_mm);
+    }
+}
+
+/**
  * Rack Mounting Holes
  *
  * 9 rows per rail (3 holes per U x 3U = 9) on each side.
@@ -261,9 +338,10 @@ module display_mount_panel() {
         union() {
             panel_slab();
             lcd_mounting_bosses();
+            if (enable_centering_pins) lcd_centering_pins();
         }
         lcd_window_cutout();
-        lcd_screw_holes();
+        if (!enable_centering_pins) lcd_screw_holes();
         lcd_screw_head_insets();
         rack_mounting_holes();
     }

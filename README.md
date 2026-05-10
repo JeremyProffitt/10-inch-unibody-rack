@@ -55,6 +55,38 @@ Cubby rack with a USW Flex Mini pocket on the divider wall between the rack inte
 
 **Download STL**: [rack-with-cubbies-with-pocket.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies-with-pocket.stl)
 
+### Just a Rack Short (6U)
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-short_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-short_rear.png) |
+
+Shorter-depth variant of the standard unibody rack. Same M6 nut traps, grip bars, and handle cutouts as the full rack, but with a reduced front-to-back depth for locations with less clearance.
+
+**Download STL**: [just-a-rack-short.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-short.stl)
+
+### Just a Rack with Pocket Short (6U)
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-with-pocket-short_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-with-pocket-short_rear.png) |
+
+Short-depth rack body with the built-in USW Flex Mini pocket on the right interior wall. Combines the compact depth of the short variant with the integrated switch storage of the pocket variant.
+
+**Download STL**: [just-a-rack-with-pocket-short.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-with-pocket-short.stl)
+
+### Waveshare 7-Inch LCD Panel
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-panel_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-panel_rear.png) |
+
+Panel mount for the [Waveshare 7-inch LCD Display (Model B)](waveshare-7inch-lcd-display-b.md). Fits into a standard 10-inch rack panel slot, turning the LCD into a rack-mounted display.
+
+**Documentation**: [waveshare-7inch-lcd-display-b.md](waveshare-7inch-lcd-display-b.md)
+
+**Download STL**: [waveshare-7inch-lcd-panel.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-panel.stl)
+
 ## Print Instructions
 
 1. **Orientation**: Place the front face (Z=0) down on the build plate
