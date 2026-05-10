@@ -19,7 +19,7 @@ A parametric, unibody 10-inch server rack designed to 3D print in a single piece
 
 | Front View | Rear View |
 |------------|-----------|
-| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack_rear.png) |
+| ![Front](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/just-a-rack_front.png) | ![Rear](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/just-a-rack_rear.png) |
 
 Unibody 6U 10-inch server rack with M6 nut traps, 18mm grip bars, filleted handle cutouts, and 30mm deep mounting rails. Prints support-free on the Bambu Labs H2D.
 
@@ -29,7 +29,7 @@ Unibody 6U 10-inch server rack with M6 nut traps, 18mm grip bars, filleted handl
 
 | Front View | Rear View |
 |------------|-----------|
-| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-with-pocket_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-with-pocket_rear.png) |
+| ![Front](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/just-a-rack-with-pocket_front.png) | ![Rear](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/just-a-rack-with-pocket_rear.png) |
 
 Same rack with a USW Flex Mini pocket on the right interior wall. Includes a 45-degree support ramp and triangular cable routing cutout for support-free printing.
 
@@ -39,7 +39,7 @@ Same rack with a USW Flex Mini pocket on the right interior wall. Includes a 45-
 
 | Front View | Rear View |
 |------------|-----------|
-| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies_rear.png) |
+| ![Front](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/rack-with-cubbies_front.png) | ![Rear](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/rack-with-cubbies_rear.png) |
 
 Same rack with a 55mm cubby extension on the right side featuring horizontal shelves every 4 inches for accessory storage.
 
@@ -49,7 +49,7 @@ Same rack with a 55mm cubby extension on the right side featuring horizontal she
 
 | Front View | Rear View |
 |------------|-----------|
-| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies-with-pocket_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/rack-with-cubbies-with-pocket_rear.png) |
+| ![Front](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/rack-with-cubbies-with-pocket_front.png) | ![Rear](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/rack-with-cubbies-with-pocket_rear.png) |
 
 Cubby rack with a USW Flex Mini pocket on the divider wall between the rack interior and cubbies. Combines storage cubbies with the built-in switch pocket.
 
@@ -59,7 +59,7 @@ Cubby rack with a USW Flex Mini pocket on the divider wall between the rack inte
 
 | Front View | Rear View |
 |------------|-----------|
-| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-short_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-short_rear.png) |
+| ![Front](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/just-a-rack-short_front.png) | ![Rear](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/just-a-rack-short_rear.png) |
 
 Shorter-depth variant of the standard unibody rack. Same M6 nut traps, grip bars, and handle cutouts as the full rack, but with a reduced front-to-back depth for locations with less clearance.
 
@@ -69,7 +69,7 @@ Shorter-depth variant of the standard unibody rack. Same M6 nut traps, grip bars
 
 | Front View | Rear View |
 |------------|-----------|
-| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-with-pocket-short_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/just-a-rack-with-pocket-short_rear.png) |
+| ![Front](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/just-a-rack-with-pocket-short_front.png) | ![Rear](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/just-a-rack-with-pocket-short_rear.png) |
 
 Short-depth rack body with the built-in USW Flex Mini pocket on the right interior wall. Combines the compact depth of the short variant with the integrated switch storage of the pocket variant.
 
@@ -79,7 +79,7 @@ Short-depth rack body with the built-in USW Flex Mini pocket on the right interi
 
 | Front View | Rear View |
 |------------|-----------|
-| ![Front](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-panel_front.png) | ![Rear](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-panel_rear.png) |
+| ![Front](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/waveshare-7inch-lcd-panel_front.png) | ![Rear](https://raw.githubusercontent.com/JeremyProffitt/10-inch-unibody-rack/master/assets/waveshare-7inch-lcd-panel_rear.png) |
 
 Panel mount for the [Waveshare 7-inch LCD Display (Model B)](waveshare-7inch-lcd-display-b.md). Fits into a standard 10-inch rack panel slot, turning the LCD into a rack-mounted display.
 

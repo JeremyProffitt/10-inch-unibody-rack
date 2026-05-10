@@ -23,6 +23,16 @@ jobs:
       - name: Build STLs and PNGs
         run: xvfb-run -a bash build.sh
 
+      - name: Commit preview images to assets/
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p assets
+          cp output/images/*.png assets/
+          git add assets/
+          git diff --staged --quiet || git commit -m "Update preview images [skip ci]"
+          git push
+
       - name: Release
         uses: ncipollo/release-action@v1
         with:
