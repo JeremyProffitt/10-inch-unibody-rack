@@ -29,7 +29,8 @@ for scad_file in *.scad; do
     ${OPENSCAD} -o "${OUTPUT_DIR}/stl/${name}.stl" "${scad_file}"
 
     echo "  Rendering front view..."
-    ${OPENSCAD} -o "${OUTPUT_DIR}/images/${name}_front.png" \
+    ${OPENSCAD} --render \
+        -o "${OUTPUT_DIR}/images/${name}_front.png" \
         --camera=0,0,0,55,0,45,0 \
         --autocenter --viewall \
         --imgsize=1024,1024 \
@@ -37,7 +38,8 @@ for scad_file in *.scad; do
         "${scad_file}"
 
     echo "  Rendering rear view..."
-    ${OPENSCAD} -o "${OUTPUT_DIR}/images/${name}_rear.png" \
+    ${OPENSCAD} --render \
+        -o "${OUTPUT_DIR}/images/${name}_rear.png" \
         --camera=0,0,0,55,0,225,0 \
         --autocenter --viewall \
         --imgsize=1024,1024 \

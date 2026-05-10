@@ -20,7 +20,8 @@ for %%f in (*.scad) do (
         %OPENSCAD% -o %OUTPUT_DIR%\stl\%%~nf.stl "%%f"
 
         echo   Rendering front view...
-        %OPENSCAD% -o %OUTPUT_DIR%\images\%%~nf_front.png ^
+        %OPENSCAD% --render ^
+            -o %OUTPUT_DIR%\images\%%~nf_front.png ^
             --camera=0,0,0,55,0,45,0 ^
             --autocenter --viewall ^
             --imgsize=1024,1024 ^
@@ -28,7 +29,8 @@ for %%f in (*.scad) do (
             "%%f"
 
         echo   Rendering rear view...
-        %OPENSCAD% -o %OUTPUT_DIR%\images\%%~nf_rear.png ^
+        %OPENSCAD% --render ^
+            -o %OUTPUT_DIR%\images\%%~nf_rear.png ^
             --camera=0,0,0,55,0,225,0 ^
             --autocenter --viewall ^
             --imgsize=1024,1024 ^
