@@ -2,113 +2,111 @@
 
 ## Overview
 
-Single-display desktop case using the exact LCD opening and four-hole pattern
-from `waveshare-7inch-lcd-panel.scad`. The case adds a clear 25.40 mm service
-bay beyond the panel's right edge, a Raspberry Pi 4/5 mount, open top/right I/O
-notches, and an integral 35-degree wedge stand.
+Closed two-part enclosure for one landscape Waveshare LCD and one Raspberry Pi
+4/5. The removable lid contains the LCD opening, M3 holes, and mounting bosses.
+The Pi mounts horizontally to bosses on the solid base floor, behind the LCD.
 
-The angle is parametric, not hinged. Change `lcd_angle_from_table_deg` in the
-SCAD file and the sloped rear edge and total depth regenerate automatically.
+The base has four continuous walls. Three 10 mm front notches and two 10 mm
+right notches carry cable cords; the lid plate caps the front notches and the
+right locator rail has matching reliefs.
+There are no broad wall openings. The default LCD angle is 35 degrees above the
+table, and changing `lcd_angle_from_table_deg` recalculates the base footprint,
+rear height, and LCD-to-wall clearance.
 
 ## Dimensions
 
 | Parameter | Default | Notes |
 |---|---:|---|
-| Source feature panel | 254.00 x 133.35 mm | Existing opening/hole compatibility |
-| Panel-cell border | 0.96 mm top/bottom | Gives PCB 0.50 mm wall clearance |
-| Case envelope | 297.85 x 135.27 x 136.72 mm | W x H x maximum D at 35 degrees |
-| Bottom depth | 42.00 mm | Minimum electronics depth |
-| Right extension | 43.85 mm | Full LCD-to-Pi cable corridor plus Pi/wall |
-| Clear LCD-to-Pi corridor | 25.40 mm | Unobstructed in the connector Y band |
-| LCD angle | 35 degrees | Screen angle above tabletop |
-| LCD window, back | 156.00 x 89.00 mm | Existing panel opening |
-| LCD window, front | 162.00 x 95.00 mm | 3.00 mm bevel per side |
-| LCD window offset | +1.00 X, +4.00 Y mm | Within the source feature panel |
-| LCD PCB | 164.90 x 124.27 x 1.60 mm | Module total depth 8.30 mm |
-| LCD hole pitch | 156.90 x 114.96 mm | Four 3.25 mm M3 clearance holes |
-| LCD boss | 7.00 dia. x 6.70 mm | Four per display |
-| LCD screw counterbore | 5.00 dia. x 2.00 mm | Front screw-head recess |
-| Pi board pattern | 85.00 x 56.00 mm | Pi 4/5, rotated 90 degrees CCW |
-| Pi hole pitch | 58.00 x 49.00 mm | Four 2.20 mm pilot bosses |
-| Pi hole inset | 3.50 x 3.50 mm | Source board coordinates |
-| Pi edge gap | 2.00 mm | Between port edges and inner walls |
-| Pi standoff | 7.00 dia. x 9.00 mm | Board plane at Z=14.00 mm |
-| Pi pilot depth | 7.00 mm | 2.20 mm blind holes |
-| Pi component allowance | 18.00 mm | Behind the board plane |
-| Wall thickness | 5.00 mm | Front, top, bottom, and side cheeks |
-| Case/feature corner radii | 4.00 / 1.00 mm | Outer shell / window and boss transitions |
-| I/O front lip | 9.00 mm | Solid depth before rear-open notches |
-| Pi access margin/height | 4.00 / 72.00 mm | Broad top/right port notches |
-| LCD access band | Y=70.00..122.00 mm | Expanded 4.00 mm each end in wall cutout |
+| LCD panel region | 284.40 x 137.48 mm | Includes right connector extension |
+| Base print envelope | 284.40 x 112.62 x 133.85 mm | W x table depth x rear height |
+| Lid print envelope | 289.20 x 142.28 x 11.70 mm | Separate face-down part |
+| LCD angle | 35 degrees | Above tabletop |
+| Base front height | 55.00 mm | Minimum closed electronics depth |
+| Solid floor | 5.00 mm | Full base footprint |
+| Wall thickness | 5.00 mm | Four continuous walls |
+| Lid thickness | 5.00 mm | LCD faceplate |
+| Lid side rails | 2.00 x 4.00 mm | Thickness x depth outside side walls |
+| Lid fit clearance | 0.40 mm per side | Removable outside cap |
+| Right extension | 30.40 mm | 25.40 mm clear + 5.00 mm wall |
+| Cable passages | 5 x 10.00 mm | Three front, two right U-notches |
+| Cable notch depth | 12.00 mm | Open at base rim; capped by lid |
+| LCD window, back/front | 156.00 x 89.00 / 162.00 x 95.00 mm | Existing opening + bevel |
+| LCD window offset | +1.00 X, +4.00 Y mm | Source panel coordinates |
+| LCD PCB/module | 164.90 x 124.27 x 1.60 / 8.30 mm | PCB / total depth |
+| LCD hole pitch/diameter | 156.90 x 114.96 / 3.25 mm | Four M3 holes |
+| LCD boss | 7.00 x 6.70 mm | Diameter x length |
+| LCD counterbore | 5.00 x 2.00 mm | Diameter x depth |
+| Pi board/hole pitch | 85.00 x 56.00 / 58.00 x 49.00 mm | Pi 4/5 shared pattern |
+| Pi standoff | 7.00 x 9.00 mm | Diameter x height on floor |
+| Pi pilot hole | 2.20 x 7.00 mm | M2.5 self-tapping pilot |
+| Pi component allowance | 18.00 mm | Above board |
 | Printer limit | 325 x 320 x 325 mm | H2D single-nozzle volume |
-
-Maximum depth is `42 + case_height * tan(lcd_angle_from_table_deg)`. At this
-layout's height the H2D Z limit permits angles below 64.45 degrees; the model's
-general validation range is 15 to less than 60 degrees.
 
 ## Cross-Sections
 
-### Front View (X/Y)
+### Front View - Lid
 
 ```text
-<---------------- 254.00 panel ----------------><---43.85--->
-+------------------------------------------------+--------+  ^
-|     o +------------------------------+ o       |        |  |
-|       |        LCD 156 x 89          |         | Pi /   |  | 135.27
-|     o +------------------------------+ o       | cables |  |
-+------------------------------------------------+--------+  v
-                                                   right I/O
+<--------------------- 289.20 --------------------->
++---------------------------------------------------+
+|          o +-------------------------+ o          |
+|            |     LANDSCAPE LCD       |            |
+|          o +-------------------------+ o          |
++---------------------------------------------------+
+       removable lid; LCD hardware on underside
 ```
 
-### Top View (X/Z)
+### Top View - Base With Lid Removed
 
 ```text
-front / build plate Z=0
-+---------------------------------------------------------+
-| bezel             open electronics cavity               |
-+-----+---------------------------------------------+-----+
-      left cheek                             right cheek
-      <-------------- open rear ------------------->
++===================================================+  rear wall
+|                                                   |
+|             SOLID BOTTOM FLOOR                    |
+|                                  +-------------+  |
+|                                  | Raspberry Pi|->|  two 10 mm right notches
+|                                  +-------------+  |
++============================= U==U==U ==============  front wall
+                              power / video cords
 ```
 
-### Side View (Y/Z)
+### Side View - Closed
 
 ```text
-Y=135.27  +--------------------------------------* Z=136.72
-          |                                    /
-  LCD     |                                  /  rear/table edge
-  plane   |                                /    (35 degrees)
-Y=0       +------------- Z=42.00 --------*
-          Z=0
+                      lid / LCD plane (35 degrees)
+rear 133.85  +-----------------------------------+
+             |                                  /
+             |       Pi behind LCD             /
+front 55.00  +--------------------------------/
+             +================================+  solid 5 mm floor
+             <--------- 112.62 table depth -->
 ```
 
 ## Components
 
 | Component | Position / Bounding Box | Connection |
 |---|---|---|
-| Face slab | `[0,0,0]` to `[297.85,135.27,5]` | Supports LCD and Pi bosses |
-| LCD opening | Source-panel offset `50.00,26.175`, then +0.96 Y | Exact inherited feature placement |
-| LCD bosses | Four source-panel PCB holes, Z `5.00..11.70` | LCD mounts from rear |
-| Pi bosses | Upper-right solid service area, Z `5.00..14.00` | Pi mounts from open rear |
-| Side cheeks | First/last 5.00 mm of X | Sloped rear edges support case |
-| Connector notches | Right and top walls, Z `9.00..rear` | LCD, USB, power, video access |
+| Solid base | `[0,0,0]` to `[284.40,112.62,133.85]` | Floor-down printable part |
+| Pi bosses | Bottom-right floor region, Z `5.00..14.00` | Pi lies flat behind LCD |
+| Base walls | Complete footprint perimeter | Sloped top receives lid |
+| Lid | `[0,0,0]` to `[289.20,142.28,11.70]` in print orientation | Plate plus outside side rails |
+| LCD bosses | Lid underside, Z `5.00..11.70` in print orientation | Four M3 mounts |
+| Cable passages | Three front and two right 10 mm U-notches | Cord drops in before lid |
 
 ## Print And Assembly
 
-1. Print front-face-down at Z=0 with no supports, 0.20 mm layers, and a brim.
-2. Place the LCD against the bezel from the rear and fasten its four holes with
-   M3 hardware. Check screw length against the physical LCD revision.
-3. Place a Pi 4/5 on the four service-bay bosses and use M2.5 self-tapping
-   screws in the 2.20 mm pilot holes.
-4. Route LCD HDMI/micro-USB through the right notch. Route Pi USB/Ethernet
-   through the top notch and Pi USB-C/micro-HDMI through the right notch.
-5. Place the two sloped rear cheek edges on the tabletop. Use non-slip pads if
-   the table surface is smooth.
+1. Export and print `-base.stl` floor-down without supports.
+2. Export and print `-lid.stl` LCD-front-down without supports.
+3. Mount the Pi to the base bosses with M2.5 self-tapping screws.
+4. Plug cables into the Pi, then drop their cords into the 10 mm U-notches.
+   Plug shells remain inside and do not need to pass through the openings.
+5. Mount the LCD to the lid with four M3 fasteners and route its right-edge
+   HDMI and micro-USB leads inside the 25.4 mm service region.
+6. Rest the lid plate on the complete wall rim and press its two outside side
+   rails over the left/right walls.
 
-The rear stays open for cooling, GPIO/microSD access, cable installation, and
-support-free printing. See [LCD hardware reference](waveshare-7inch-lcd-display-b.md)
-and [Pi mechanical reference](raspberry-pi-4-5-mechanical-reference.md).
+See [LCD hardware reference](waveshare-7inch-lcd-display-b.md) and
+[Pi mechanical reference](raspberry-pi-4-5-mechanical-reference.md).
 
 ## Changelog
 
-- 2026-07-12: Initial parametric landscape case.
+- 2026-07-12: Rebuilt as a closed solid-bottom base with removable LCD lid.

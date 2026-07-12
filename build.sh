@@ -25,9 +25,19 @@ for scad_file in *.scad; do
     echo ""
     echo "=== Processing ${name} ==="
 
-    echo "  Building STL..."
-    ${OPENSCAD} --export-format binstl \
-        -o "${OUTPUT_DIR}/stl/${name}.stl" "${scad_file}"
+    if [[ "${name}" == waveshare-7inch-lcd-case-* ]]; then
+        echo "  Building base STL..."
+        ${OPENSCAD} --export-format binstl -D 'part="base"' \
+            -o "${OUTPUT_DIR}/stl/${name}-base.stl" "${scad_file}"
+
+        echo "  Building lid STL..."
+        ${OPENSCAD} --export-format binstl -D 'part="lid"' \
+            -o "${OUTPUT_DIR}/stl/${name}-lid.stl" "${scad_file}"
+    else
+        echo "  Building STL..."
+        ${OPENSCAD} --export-format binstl \
+            -o "${OUTPUT_DIR}/stl/${name}.stl" "${scad_file}"
+    fi
 
     echo "  Rendering front view..."
     ${OPENSCAD} --render \

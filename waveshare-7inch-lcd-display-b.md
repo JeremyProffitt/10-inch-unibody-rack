@@ -86,10 +86,11 @@ the PCB top edge. The source panel centers the PCB at Y=4.54..128.81 mm:
 | Backlight switch center | 53.88 | 74.93 |
 
 The cases reserve source-panel Y=70.00..122.00 mm for the connector envelope
-and enlarge the wall notch by 4.00 mm at each end. The in-plane cable corridor
-extends 25.40 mm from the PCB edge before any Raspberry Pi geometry. These are
-clearance envelopes rather than connector-body dimensions; verify unusually
-large straight plugs against the physical display revision.
+and keep 25.40 mm of internal lid space beyond the connector edge. The
+Raspberry Pi mounts separately to the solid base floor behind the LCD plane,
+not in that lid region. These are clearance envelopes rather than exact
+connector-body dimensions; verify unusually large straight plugs against the
+physical display revision.
 
 Any enclosure must provide at least **1 inch (25.4 mm) of clear cable space on
 the installed right side**. Rotating the LCD 90 degrees counter-clockwise for

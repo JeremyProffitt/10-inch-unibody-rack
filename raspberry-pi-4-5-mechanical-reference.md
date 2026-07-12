@@ -25,17 +25,18 @@ top long edge:
 - USB-C power and micro-HDMI video connectors occupy the bottom long edge.
 - The microSD card is reached from the opposite short edge.
 
-The case rotates the Pi 90 degrees counter-clockwise. USB/Ethernet therefore
-faces the case top, while power/video faces the case right. The access notches
-are deliberately broader than either board's individual port outlines so Pi 4
-and Pi 5 connector differences, plug shells, and right-angle cables are not
-locked to a single revision.
+The closed cases keep this standard orientation on the solid floor:
+USB/Ethernet faces the right wall, while power and micro-HDMI face the front
+wall. Cable cords drop into 10 mm open-top wall notches before the lid is fitted,
+so plug shells remain inside and do not need to pass through a drilled hole.
 
 ## Mounting Notes
 
 - The printed bosses use 2.20 mm blind pilot holes for M2.5 self-tapping screws.
 - The board plane is 14.00 mm behind the case front, leaving 9.00 mm below it.
-- The rear is open for cooling and for access to the GPIO, microSD, and cooler.
+- Removing the lid provides service access to GPIO, microSD, ports, and cooler.
+- The enclosure is closed; confirm the selected Pi load and cooler do not require
+  additional ventilation before long unattended operation.
 - Verify an installed HAT, active cooler, or unusually large plug against the
   x-ray render before committing to a full-size print.
 

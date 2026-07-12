@@ -16,8 +16,17 @@ for %%f in (*.scad) do (
         echo.
         echo === Processing %%~nf ===
 
-        echo   Building STL...
-        %OPENSCAD% --export-format binstl -o %OUTPUT_DIR%\stl\%%~nf.stl "%%f"
+        echo %%~nf| findstr /b /c:"waveshare-7inch-lcd-case-" >nul
+        if errorlevel 1 (
+            echo   Building STL...
+            %OPENSCAD% --export-format binstl -o %OUTPUT_DIR%\stl\%%~nf.stl "%%f"
+        ) else (
+            echo   Building base STL...
+            %OPENSCAD% --export-format binstl -D "part=\"base\"" -o %OUTPUT_DIR%\stl\%%~nf-base.stl "%%f"
+
+            echo   Building lid STL...
+            %OPENSCAD% --export-format binstl -D "part=\"lid\"" -o %OUTPUT_DIR%\stl\%%~nf-lid.stl "%%f"
+        )
 
         echo   Rendering front view...
         %OPENSCAD% --render ^

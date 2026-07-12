@@ -1,50 +1,66 @@
 /**
- * Shared generator for Waveshare 7-inch LCD + Raspberry Pi desktop cases.
+ * Shared generator for closed Waveshare 7-inch LCD + Raspberry Pi cases.
  *
- * Coordinate System (print orientation):
- *   X = case width  (positive = right when facing the LCD)
- *   Y = case height (positive = toward the top of the LCD)
- *   Z = case depth  (positive = behind the LCD; upward while printing)
+ * ASSEMBLED COORDINATE SYSTEM
+ *   X = case width across the display
+ *   Y = case footprint depth on the table
+ *   Z = height above the table
  *
- * Origin: Front-bottom-left corner of the case.
- * Z=0 is the front face and is placed on the build plate.
+ * PRINT ORIENTATION
+ *   Base: solid floor at Z=0, walls and Pi bosses grow upward.
+ *   Lid:  LCD front at Z=0, face-down; skirt and LCD bosses grow upward.
  *
  * COMPONENT INDEX
- *   case_face_slab            [0,0,0] to [case_width,case_height,5]
- *   case_side_cheek (left)    X=[0,5], trapezoid in YZ; left rear/table rail
- *   case_side_cheek (right)   X=[W-5,W], trapezoid in YZ; right rear/table rail
- *   case_bottom_wall          Y=[0,5], rear edge follows table-contact plane
- *   case_top_wall             Y=[H-5,H], rear edge follows table-contact plane
- *   lcd_window_cutout         one per LCD cell; exact existing-panel opening
- *   lcd_mounting_bosses       four per LCD cell; PCB alignment and support
- *   lcd_screw_holes           four per LCD cell; M3 clearance through front
- *   pi_mounting_bosses        four in upper-right service region; Pi 4/5 pitch
- *   connector_access_cutouts  rear-open notches through top/right case walls
+ *   case_base             solid floor, four continuous walls, Pi bosses
+ *   base_floor            [0,0,0] to [base_width,base_depth,5]
+ *   base_side_wall        5 mm side walls with sloped lid-contact edges
+ *   base_front_wall       5 mm wall at Y=0
+ *   base_rear_wall        5 mm wall at Y=base_depth
+ *   pi_mounting_bosses    four floor-mounted Pi 4/5 bosses
+ *   case_lid              LCD faceplate with outside cap skirt
+ *   lid_plate             front plate holding LCD openings and screws
+ *   lid_outer_skirt       two outside side rails locating the removable lid
+ *   lcd_mounting_bosses   four per display on the lid underside
+ *   cable_notches         localized 10 mm passages in base and lid skirt
  *
- * Alignment notes:
- *   - Landscape cells retain the source panel coordinate system.
- *   - Portrait cells rotate the source panel 90 degrees counter-clockwise.
- *   - LCD connectors are on viewer-right in landscape and viewer-top in portrait.
- *   - The Raspberry Pi is rotated 90 degrees counter-clockwise so USB/Ethernet
- *     faces the case top and USB-C/micro-HDMI faces the case right.
+ * The Pi is always mounted to the solid base behind the LCD lid. It never
+ * shares the LCD mounting plate. The default assembly places the lid at
+ * lcd_angle_from_table_deg and derives base footprint/depth from that angle.
  */
 
 // =========================================
-// PRINTER AND SOURCE-PANEL DIMENSIONS
+// PRINTER AND COMMON CASE DIMENSIONS
 // =========================================
 
 printer_max_x_mm = 325.00;
 printer_max_y_mm = 320.00;
 printer_max_z_mm = 325.00;
 
-source_panel_width_mm = 254.00;
-source_panel_height_mm = 133.35;
-panel_thickness_mm = 5.00;
 wall_thickness_mm = 5.00;
+floor_thickness_mm = 5.00;
+lid_thickness_mm = 5.00;
 case_corner_radius_mm = 4.00;
 feature_corner_radius_mm = 1.00;
+lcd_perimeter_clearance_mm = 0.50;
 
-// Exact opening and placement inherited from waveshare-7inch-lcd-panel.scad.
+lid_skirt_thickness_mm = 2.00;
+lid_skirt_clearance_mm = 0.40;
+lid_skirt_depth_mm = 4.00;
+lid_overhang_mm = lid_skirt_thickness_mm + lid_skirt_clearance_mm;
+
+base_front_height_mm = 55.00;
+inter_panel_gap_mm = 5.00;
+connector_clearance_mm = 25.40;
+case_right_extension_mm = connector_clearance_mm + wall_thickness_mm;
+portrait_top_extension_mm = connector_clearance_mm + wall_thickness_mm;
+
+// =========================================
+// WAVESHARE LCD DIMENSIONS
+// =========================================
+
+source_panel_width_mm = 254.00;
+source_panel_height_mm = 133.35;
+
 lcd_window_width_mm = 156.00;
 lcd_window_height_mm = 89.00;
 lcd_window_offset_x_mm = 1.00;
@@ -62,121 +78,6 @@ lcd_boss_diameter_mm = 7.00;
 lcd_boss_length_mm = lcd_module_thickness_mm - lcd_pcb_thickness_mm;
 lcd_screw_inset_diameter_mm = 5.00;
 lcd_screw_inset_depth_mm = 2.00;
-lcd_perimeter_clearance_mm = 0.50;
-source_panel_cell_margin_mm = max(
-    0,
-    wall_thickness_mm + lcd_perimeter_clearance_mm
-        - (source_panel_height_mm - lcd_pcb_height_mm) / 2);
-expanded_panel_height_mm = source_panel_height_mm
-    + 2 * source_panel_cell_margin_mm;
-
-// =========================================
-// CASE, STAND, AND SERVICE-BAY DIMENSIONS
-// =========================================
-
-inter_panel_gap_mm = 5.00;
-connector_clearance_mm = 25.40;
-minimum_case_right_extension_mm = connector_clearance_mm + wall_thickness_mm;
-
-// Portrait rotation moves the LCD connector edge to the top. The larger top
-// extension preserves the 25.4 mm cable chase and fits the rotated Pi footprint.
-portrait_top_clearance_mm = 45.00;
-portrait_top_extension_mm = portrait_top_clearance_mm + wall_thickness_mm;
-
-case_bottom_depth_mm = 42.00;
-
-// =========================================
-// RASPBERRY PI 4/5 MOUNTING DIMENSIONS
-// =========================================
-
-pi_board_width_mm = 85.00;
-pi_board_height_mm = 56.00;
-pi_hole_spacing_x_mm = 58.00;
-pi_hole_spacing_y_mm = 49.00;
-pi_hole_inset_x_mm = 3.50;
-pi_hole_inset_y_mm = 3.50;
-pi_oriented_width_mm = pi_board_height_mm;
-pi_oriented_height_mm = pi_board_width_mm;
-pi_edge_gap_mm = 2.00;
-pi_lcd_min_gap_mm = 2.00;
-pi_standoff_height_mm = 9.00;
-pi_boss_diameter_mm = 7.00;
-pi_pilot_hole_diameter_mm = 2.20;
-pi_pilot_hole_depth_mm = 7.00;
-pi_component_clearance_mm = 18.00;
-
-pi_board_plane_z_mm = panel_thickness_mm + pi_standoff_height_mm;
-
-// =========================================
-// CONNECTOR ACCESS AND BOOLEAN DIMENSIONS
-// =========================================
-
-io_front_lip_depth_mm = 9.00;
-pi_access_margin_mm = 4.00;
-pi_right_access_height_mm = 72.00;
-lcd_connector_access_y0_mm = 70.00;
-lcd_connector_access_height_mm = 52.00;
-lcd_connector_access_margin_mm = 4.00;
-boolean_overlap_mm = 0.50;
-boolean_thin_slice_mm = 0.02;
-debug_axis_length_mm = 50.00;
-debug_axis_radius_mm = 0.80;
-debug_board_thickness_mm = 1.60;
-debug_connector_envelope_depth_mm = 20.00;
-debug_envelope_separation_mm = 0.05;
-
-$fn = 48;
-
-// =========================================
-// LAYOUT COMPUTATION
-// =========================================
-
-layout_is_portrait = case_layout == "portrait" || case_layout == "dual_portrait";
-lcd_columns = case_layout == "dual_portrait" ? 2 : 1;
-lcd_rows = case_layout == "dual_landscape" ? 2 : 1;
-lcd_cell_width_mm = layout_is_portrait
-    ? expanded_panel_height_mm
-    : source_panel_width_mm;
-lcd_cell_height_mm = layout_is_portrait
-    ? source_panel_width_mm
-    : expanded_panel_height_mm;
-layout_content_width_mm = lcd_columns * lcd_cell_width_mm
-    + (lcd_columns - 1) * inter_panel_gap_mm;
-layout_content_height_mm = lcd_rows * lcd_cell_height_mm
-    + (lcd_rows - 1) * inter_panel_gap_mm;
-lcd_connector_edge_x_mm = (source_panel_width_mm + lcd_pcb_width_mm) / 2;
-landscape_case_right_extension_mm = max(
-    minimum_case_right_extension_mm,
-    lcd_connector_edge_x_mm + connector_clearance_mm
-        + pi_oriented_width_mm + pi_edge_gap_mm + wall_thickness_mm
-        - source_panel_width_mm);
-case_right_extension_mm = layout_is_portrait
-    ? minimum_case_right_extension_mm
-    : landscape_case_right_extension_mm;
-case_width_mm = layout_content_width_mm + case_right_extension_mm;
-case_height_mm = layout_content_height_mm
-    + (layout_is_portrait ? portrait_top_extension_mm : 0);
-
-case_rear_edge_rise_mm = case_height_mm * tan(lcd_angle_from_table_deg);
-case_top_depth_mm = case_bottom_depth_mm + case_rear_edge_rise_mm;
-case_bottom_wall_inner_depth_mm = case_bottom_depth_mm
-    + wall_thickness_mm * tan(lcd_angle_from_table_deg);
-case_top_wall_inner_depth_mm = case_top_depth_mm
-    - wall_thickness_mm * tan(lcd_angle_from_table_deg);
-pi_board_x0_mm = case_width_mm - wall_thickness_mm - pi_edge_gap_mm
-    - pi_oriented_width_mm;
-pi_board_y0_mm = case_height_mm - wall_thickness_mm - pi_edge_gap_mm
-    - pi_oriented_height_mm;
-
-portrait_connector_access_x0_mm = source_panel_cell_margin_mm
-    + source_panel_height_mm
-    - (lcd_connector_access_y0_mm + lcd_connector_access_height_mm)
-    - lcd_connector_access_margin_mm;
-portrait_connector_access_width_mm = lcd_connector_access_height_mm
-    + 2 * lcd_connector_access_margin_mm;
-last_portrait_connector_access_x1_mm = (lcd_columns - 1)
-    * (lcd_cell_width_mm + inter_panel_gap_mm)
-    + portrait_connector_access_x0_mm + portrait_connector_access_width_mm;
 
 lcd_pcb_x0_mm = (source_panel_width_mm - lcd_pcb_width_mm) / 2;
 lcd_pcb_y0_mm = (source_panel_height_mm - lcd_pcb_height_mm) / 2;
@@ -198,6 +99,25 @@ lcd_hole_positions_mm = [
      lcd_pcb_y0_mm + lcd_pcb_height_mm - lcd_hole_inset_y_mm]
 ];
 
+// =========================================
+// RASPBERRY PI 4/5 DIMENSIONS
+// =========================================
+
+pi_board_width_mm = 85.00;
+pi_board_height_mm = 56.00;
+pi_board_thickness_mm = 1.60;
+pi_hole_spacing_x_mm = 58.00;
+pi_hole_spacing_y_mm = 49.00;
+pi_hole_inset_x_mm = 3.50;
+pi_hole_inset_y_mm = 3.50;
+pi_wall_gap_mm = 2.00;
+pi_standoff_height_mm = 9.00;
+pi_boss_diameter_mm = 7.00;
+pi_pilot_hole_diameter_mm = 2.20;
+pi_pilot_hole_depth_mm = 7.00;
+pi_component_clearance_mm = 18.00;
+electronics_vertical_gap_mm = 8.00;
+
 pi_hole_positions_mm = [
     [pi_hole_inset_x_mm, pi_hole_inset_y_mm],
     [pi_hole_inset_x_mm + pi_hole_spacing_x_mm, pi_hole_inset_y_mm],
@@ -207,48 +127,140 @@ pi_hole_positions_mm = [
 ];
 
 // =========================================
-// DESIGN AND PRINT-FIT ASSERTIONS
+// LOCALIZED CABLE PASSAGES
+// =========================================
+
+cable_hole_width_mm = 10.00;
+cable_notch_depth_mm = 12.00;
+cable_boolean_margin_mm = 0.50;
+
+// Approximate cable-routing positions, not connector-shaped wall openings.
+pi_front_cable_x_offsets_mm = [12.00, 30.00, 48.00];
+pi_right_cable_y_offsets_mm = [18.00, 40.00];
+
+// =========================================
+// BOOLEAN, DEBUG, AND FACET DIMENSIONS
+// =========================================
+
+boolean_overlap_mm = 0.50;
+boolean_thin_slice_mm = 0.02;
+debug_axis_length_mm = 50.00;
+debug_axis_radius_mm = 0.80;
+debug_envelope_separation_mm = 0.05;
+
+$fn = 48;
+
+// =========================================
+// LAYOUT AND ANGLE COMPUTATION
+// =========================================
+
+layout_is_portrait = case_layout == "portrait" || case_layout == "dual_portrait";
+lcd_columns = case_layout == "dual_portrait" ? 2 : 1;
+lcd_rows = case_layout == "dual_landscape" ? 2 : 1;
+
+// The margin grows with angle because a vertical base wall projects farther
+// across the underside of the tilted lid than its nominal 5 mm thickness.
+source_panel_cell_margin_mm = max(
+    0,
+    wall_thickness_mm / cos(lcd_angle_from_table_deg)
+        + lcd_perimeter_clearance_mm - lcd_pcb_y0_mm);
+expanded_panel_height_mm = source_panel_height_mm
+    + 2 * source_panel_cell_margin_mm;
+
+lcd_cell_width_mm = layout_is_portrait
+    ? expanded_panel_height_mm
+    : source_panel_width_mm;
+lcd_cell_height_mm = layout_is_portrait
+    ? source_panel_width_mm
+    : expanded_panel_height_mm;
+
+layout_content_width_mm = lcd_columns * lcd_cell_width_mm
+    + (lcd_columns - 1) * inter_panel_gap_mm;
+layout_content_height_mm = lcd_rows * lcd_cell_height_mm
+    + (lcd_rows - 1) * inter_panel_gap_mm;
+
+case_panel_width_mm = layout_content_width_mm + case_right_extension_mm;
+case_panel_height_mm = layout_content_height_mm
+    + (layout_is_portrait ? portrait_top_extension_mm : 0);
+
+base_width_mm = case_panel_width_mm;
+base_depth_mm = case_panel_height_mm * cos(lcd_angle_from_table_deg);
+base_rear_height_mm = base_front_height_mm
+    + case_panel_height_mm * sin(lcd_angle_from_table_deg);
+
+lid_width_mm = case_panel_width_mm + 2 * lid_overhang_mm;
+lid_height_mm = case_panel_height_mm + 2 * lid_overhang_mm;
+lid_part_depth_mm = max(
+    lid_thickness_mm + lid_skirt_depth_mm,
+    lid_thickness_mm + lcd_boss_length_mm);
+
+pi_board_x0_mm = base_width_mm - wall_thickness_mm
+    - pi_wall_gap_mm - pi_board_width_mm;
+pi_board_y0_mm = wall_thickness_mm + pi_wall_gap_mm;
+pi_board_plane_z_mm = floor_thickness_mm + pi_standoff_height_mm;
+
+pi_front_cable_x_centers_mm = [
+    for (offset_mm = pi_front_cable_x_offsets_mm)
+        pi_board_x0_mm + offset_mm
+];
+pi_right_cable_y_centers_mm = [
+    for (offset_mm = pi_right_cable_y_offsets_mm)
+        pi_board_y0_mm + offset_mm
+];
+
+function base_top_z_mm(y_mm) = base_front_height_mm
+    + y_mm * tan(lcd_angle_from_table_deg);
+
+// =========================================
+// FIT AND HARDWARE ASSERTIONS
 // =========================================
 
 assert(case_layout == "landscape" || case_layout == "portrait"
     || case_layout == "dual_portrait" || case_layout == "dual_landscape",
     str("Unsupported case_layout: ", case_layout));
+assert(part == "assembly" || part == "base" || part == "lid",
+    str("Unsupported part: ", part));
 assert(lcd_angle_from_table_deg >= 15 && lcd_angle_from_table_deg < 60,
     "lcd_angle_from_table_deg must be between 15 and 60 degrees");
 assert(connector_clearance_mm >= 25.40,
-    "Right-side connector clearance must remain at least 25.4 mm");
-assert(case_width_mm <= printer_max_x_mm,
-    str("Case width ", case_width_mm, " exceeds printer X=", printer_max_x_mm));
-assert(case_height_mm <= printer_max_y_mm,
-    str("Case height ", case_height_mm, " exceeds printer Y=", printer_max_y_mm));
-assert(case_top_depth_mm <= printer_max_z_mm,
-    str("Case depth ", case_top_depth_mm, " exceeds printer Z=", printer_max_z_mm,
-        "; reduce lcd_angle_from_table_deg"));
-assert(case_bottom_depth_mm >= pi_board_plane_z_mm + pi_component_clearance_mm,
-    "case_bottom_depth_mm does not clear the Raspberry Pi component envelope");
+    "LCD connector service region must remain at least 25.4 mm");
+assert(cable_hole_width_mm == 10.00,
+    "Wall cable passages must remain 10 mm wide");
 assert(source_panel_cell_margin_mm + lcd_pcb_y0_mm
-        >= wall_thickness_mm + lcd_perimeter_clearance_mm,
-    "LCD PCB does not clear the case perimeter wall");
-assert(pi_board_x0_mm >= 0 && pi_board_y0_mm >= 0,
-    "Raspberry Pi footprint falls outside the case face");
-assert(!layout_is_portrait
-        ? pi_board_x0_mm >= lcd_pcb_x0_mm + lcd_pcb_width_mm + pi_lcd_min_gap_mm
-        : pi_board_y0_mm >= lcd_pcb_x0_mm + lcd_pcb_width_mm + pi_lcd_min_gap_mm,
-    "Raspberry Pi footprint overlaps the nearest LCD PCB envelope");
-assert(layout_is_portrait
-        ? pi_board_x0_mm >= last_portrait_connector_access_x1_mm + pi_lcd_min_gap_mm
-        : pi_board_x0_mm >= lcd_connector_edge_x_mm + connector_clearance_mm,
-    "Raspberry Pi footprint obstructs the LCD connector corridor");
+        >= wall_thickness_mm / cos(lcd_angle_from_table_deg)
+            + lcd_perimeter_clearance_mm,
+    "LCD PCB does not clear the closed base wall");
+assert(pi_board_x0_mm >= wall_thickness_mm
+        && pi_board_y0_mm >= wall_thickness_mm,
+    "Raspberry Pi does not fit on the solid base floor");
+assert(base_front_height_mm
+        - (lid_thickness_mm + lcd_module_thickness_mm)
+            * cos(lcd_angle_from_table_deg)
+        >= pi_board_plane_z_mm + pi_board_thickness_mm
+            + pi_component_clearance_mm + electronics_vertical_gap_mm,
+    "Front enclosure height does not separate Pi and LCD hardware");
+assert(base_width_mm <= printer_max_x_mm,
+    str("Base width ", base_width_mm, " exceeds printer X"));
+assert(base_depth_mm <= printer_max_y_mm,
+    str("Base depth ", base_depth_mm, " exceeds printer Y"));
+assert(base_rear_height_mm <= printer_max_z_mm,
+    str("Base height ", base_rear_height_mm, " exceeds printer Z"));
+assert(lid_width_mm <= printer_max_x_mm,
+    str("Lid width ", lid_width_mm, " exceeds printer X"));
+assert(lid_height_mm <= printer_max_y_mm,
+    str("Lid height ", lid_height_mm, " exceeds printer Y"));
+assert(lid_part_depth_mm <= printer_max_z_mm,
+    str("Lid depth ", lid_part_depth_mm, " exceeds printer Z"));
 
 // =========================================
-// PRIMITIVES AND PLACEMENT HELPERS
+// SHARED PRIMITIVES AND TRANSFORMS
 // =========================================
 
 /**
  * Rounded Rectangular Prism
- * Parameters: w, h, d, r are width, height, depth, and XY corner radius.
+ * Parameters: w, h, d, r define width, height, depth, and XY radius.
  * Bounding box: [0,0,0] to [w,h,d].
- * Alignment: Z-parallel rounded edges remain support-free face-down.
+ * Alignment: vertical rounded edges are support-free in both print layouts.
  */
 module rounded_rect_prism(w, h, d, r) {
     hull() {
@@ -261,32 +273,35 @@ module rounded_rect_prism(w, h, d, r) {
 
 /**
  * LCD Cell Transform
- * Parameters: column and row select an arranged source-panel cell.
- * Bounding box: one 254x135.27 landscape cell or 135.27x254 portrait cell.
- * Alignment: source features gain a 0.96 mm PCB-clearance border; portrait is
- * CCW so the viewer-right connector edge faces +Y.
+ * Parameters: column and row select one arranged LCD feature cell.
+ * Bounding box: source panel plus the angle-derived perimeter clearance.
+ * Alignment: all features are offset by lid_overhang_mm on the cap plate.
  */
 module lcd_cell_transform(column, row) {
     cell_x_mm = column * (lcd_cell_width_mm + inter_panel_gap_mm);
     cell_y_mm = row * (lcd_cell_height_mm + inter_panel_gap_mm);
     if (layout_is_portrait) {
         translate([
-            cell_x_mm + source_panel_cell_margin_mm + source_panel_height_mm,
-            cell_y_mm,
+            lid_overhang_mm + cell_x_mm + source_panel_cell_margin_mm
+                + source_panel_height_mm,
+            lid_overhang_mm + cell_y_mm,
             0
         ])
             rotate([0, 0, 90]) children();
     } else {
-        translate([cell_x_mm, cell_y_mm + source_panel_cell_margin_mm, 0])
-            children();
+        translate([
+            lid_overhang_mm + cell_x_mm,
+            lid_overhang_mm + cell_y_mm + source_panel_cell_margin_mm,
+            0
+        ]) children();
     }
 }
 
 /**
  * Every LCD Cell
- * Parameters: none; passes children through each configured cell transform.
- * Bounding box: [0,0,0] to [layout_content_width,layout_content_height,*].
- * Alignment: cells are separated by inter_panel_gap_mm when dual.
+ * Parameters: none; repeats children through the configured display layout.
+ * Bounding box: contained by the central case_panel region of the lid.
+ * Alignment: dual layouts use a 5 mm solid separator band.
  */
 module every_lcd_cell() {
     for (column = [0 : lcd_columns - 1]) {
@@ -296,15 +311,34 @@ module every_lcd_cell() {
     }
 }
 
+/**
+ * Assembled Lid Transform
+ * Parameters: none; maps the flat printable lid onto the sloped base rim.
+ * Bounding box: cap overhang surrounds the complete base footprint.
+ * Alignment: lid back face contacts the base at lcd_angle_from_table_deg.
+ */
+module assembled_lid_transform() {
+    translate([
+        -lid_overhang_mm,
+        -lid_overhang_mm * cos(lcd_angle_from_table_deg)
+            - lid_thickness_mm * sin(lcd_angle_from_table_deg),
+        base_front_height_mm
+            - lid_overhang_mm * sin(lcd_angle_from_table_deg)
+            + lid_thickness_mm * cos(lcd_angle_from_table_deg)
+    ])
+        rotate([lcd_angle_from_table_deg, 0, 0])
+            mirror([0, 0, 1]) children();
+}
+
 // =========================================
-// LCD FEATURES
+// LCD LID FEATURES
 // =========================================
 
 /**
  * LCD Window Cutout
- * Parameters: none; uses the inherited source-panel opening and front bevel.
- * Bounding box: [x0-bevel,y0-bevel,-overlap] through the panel thickness.
- * Alignment: centered as in waveshare-7inch-lcd-panel.scad (+1 X, +4 Y).
+ * Parameters: none; preserves the existing 156 x 89 mm back opening.
+ * Bounding box: the front opening adds a 3 mm bevel on every edge.
+ * Alignment: front opening is larger and narrows with print Z.
  */
 module lcd_window_cutout() {
     hull() {
@@ -321,7 +355,7 @@ module lcd_window_cutout() {
         translate([
             lcd_window_x0_mm,
             lcd_window_y0_mm,
-            panel_thickness_mm + boolean_overlap_mm - boolean_thin_slice_mm
+            lid_thickness_mm + boolean_overlap_mm - boolean_thin_slice_mm
         ])
             rounded_rect_prism(
                 lcd_window_width_mm,
@@ -333,13 +367,13 @@ module lcd_window_cutout() {
 
 /**
  * LCD Mounting Bosses
- * Parameters: none; creates four 7 mm bosses at Waveshare PCB holes.
- * Bounding box: Z=[panel_thickness,panel_thickness+lcd_boss_length].
- * Alignment: boss tips meet the PCB back when the glass meets the bezel back.
+ * Parameters: none; creates four lid-mounted supports per LCD.
+ * Bounding box: Z=[lid_thickness,lid_thickness+lcd_boss_length].
+ * Alignment: LCD glass faces the lid; PCB remains wholly above the Pi floor.
  */
 module lcd_mounting_bosses() {
     for (position_mm = lcd_hole_positions_mm) {
-        translate([position_mm[0], position_mm[1], panel_thickness_mm]) {
+        translate([position_mm[0], position_mm[1], lid_thickness_mm]) {
             cylinder(
                 h = feature_corner_radius_mm,
                 d1 = lcd_boss_diameter_mm + 2 * feature_corner_radius_mm,
@@ -354,15 +388,15 @@ module lcd_mounting_bosses() {
 
 /**
  * LCD Screw Holes
- * Parameters: none; subtracts four M3 clearance holes through face and bosses.
- * Bounding box: each cylinder spans the complete face/boss stack along Z.
- * Alignment: concentric with Waveshare PCB holes; screws install from front.
+ * Parameters: none; subtracts four M3 clearance holes through lid and bosses.
+ * Bounding box: through the complete lid/boss stack along print Z.
+ * Alignment: inherits the exact Waveshare four-hole pattern.
  */
 module lcd_screw_holes() {
     for (position_mm = lcd_hole_positions_mm) {
         translate([position_mm[0], position_mm[1], -boolean_overlap_mm])
             cylinder(
-                h = panel_thickness_mm + lcd_boss_length_mm
+                h = lid_thickness_mm + lcd_boss_length_mm
                     + 2 * boolean_overlap_mm,
                 d = lcd_hole_diameter_mm);
     }
@@ -370,9 +404,9 @@ module lcd_screw_holes() {
 
 /**
  * LCD Screw Head Insets
- * Parameters: none; subtracts four shallow front counterbores.
- * Bounding box: Z=[-overlap,lcd_screw_inset_depth].
- * Alignment: concentric with the M3 holes and below the display surface.
+ * Parameters: none; subtracts shallow front counterbores.
+ * Bounding box: Z=[0,lcd_screw_inset_depth].
+ * Alignment: concentric with the LCD M3 holes.
  */
 module lcd_screw_head_insets() {
     for (position_mm = lcd_hole_positions_mm) {
@@ -383,275 +417,376 @@ module lcd_screw_head_insets() {
     }
 }
 
-// =========================================
-// CASE SHELL
-// =========================================
-
 /**
- * Case Face Slab
- * Parameters: none.
- * Bounding box: [0,0,0] to [case_width,case_height,panel_thickness].
- * Alignment: front surface is the build-plate contact plane at Z=0.
+ * Lid Plate
+ * Parameters: none; full removable front cap carrying every LCD.
+ * Bounding box: [0,0,0] to [lid_width,lid_height,lid_thickness].
+ * Alignment: front face Z=0 prints on the build plate.
  */
-module case_face_slab() {
+module lid_plate() {
     rounded_rect_prism(
-        case_width_mm,
-        case_height_mm,
-        panel_thickness_mm,
+        lid_width_mm,
+        lid_height_mm,
+        lid_thickness_mm,
         case_corner_radius_mm);
 }
 
 /**
- * Case Side Cheek
- * Parameter: x_start_mm places the left or right 5 mm cheek.
- * Bounding box: X=[x_start,x_start+wall], Y=[0,H], Z=[panel,top depth].
- * Alignment: sloped rear edge is the table-contact rail in use orientation.
+ * Lid Outer Skirt
+ * Parameters: none; two cap rails fitting outside the left/right base walls.
+ * Bounding box: full lid Y on the first/last 2 mm of X, behind the plate.
+ * Alignment: rails follow the tilt axis, so they cannot bind front/rear walls.
  */
-module case_side_cheek(x_start_mm) {
-    hull() {
-        translate([x_start_mm, 0, panel_thickness_mm - boolean_overlap_mm])
-            cube([wall_thickness_mm, boolean_thin_slice_mm, boolean_thin_slice_mm]);
-        translate([x_start_mm, case_height_mm - boolean_thin_slice_mm,
-                   panel_thickness_mm - boolean_overlap_mm])
-            cube([wall_thickness_mm, boolean_thin_slice_mm, boolean_thin_slice_mm]);
-        translate([x_start_mm, 0,
-                   case_bottom_depth_mm - boolean_thin_slice_mm])
-            cube([wall_thickness_mm, boolean_thin_slice_mm, boolean_thin_slice_mm]);
-        translate([x_start_mm, case_height_mm - boolean_thin_slice_mm,
-                   case_top_depth_mm - boolean_thin_slice_mm])
-            cube([wall_thickness_mm, boolean_thin_slice_mm, boolean_thin_slice_mm]);
+module lid_outer_skirt() {
+    translate([0, 0, lid_thickness_mm])
+        cube([
+            lid_skirt_thickness_mm,
+            lid_height_mm,
+            lid_skirt_depth_mm
+        ]);
+    translate([
+        lid_width_mm - lid_skirt_thickness_mm,
+        0,
+        lid_thickness_mm
+    ])
+        cube([
+            lid_skirt_thickness_mm,
+            lid_height_mm,
+            lid_skirt_depth_mm
+        ]);
+}
+
+/**
+ * Lid Cable Notches
+ * Parameters: none; matches the two right-wall 10 mm cable passages.
+ * Bounding box: localized openings through the right side cap rail.
+ * Alignment: front passages need no relief because there is no front rail.
+ */
+module lid_cable_notches() {
+    local_hole_width_mm = cable_hole_width_mm
+        / cos(lcd_angle_from_table_deg);
+    for (y_center_mm = pi_right_cable_y_centers_mm) {
+        local_y_center_mm = lid_overhang_mm
+            + y_center_mm / cos(lcd_angle_from_table_deg);
+        translate([
+            lid_width_mm - lid_skirt_thickness_mm - boolean_overlap_mm,
+            local_y_center_mm - local_hole_width_mm / 2,
+            lid_thickness_mm - boolean_overlap_mm
+        ])
+            cube([
+                lid_skirt_thickness_mm + 2 * boolean_overlap_mm,
+                local_hole_width_mm,
+                lid_skirt_depth_mm + 2 * boolean_overlap_mm
+            ]);
     }
 }
 
 /**
- * Case Bottom Wall
- * Parameters: none.
- * Bounding box: X=[0,W], Y=[0,wall], Z=[panel,bottom-inner depth].
- * Alignment: rear edge follows the same table plane as both side cheeks.
+ * Complete LCD Lid
+ * Parameters: none; printable cap with LCDs, skirt, and cable passages.
+ * Bounding box: [0,0,0] to [lid_width,lid_height,lid_part_depth].
+ * Alignment: print face-down; install over the outside of the base walls.
  */
-module case_bottom_wall() {
-    hull() {
-        translate([0, 0, panel_thickness_mm - boolean_overlap_mm])
-            cube([
-                case_width_mm,
-                boolean_thin_slice_mm,
-                case_bottom_depth_mm - panel_thickness_mm + boolean_overlap_mm
-            ]);
-        translate([
-            0,
-            wall_thickness_mm - boolean_thin_slice_mm,
-            panel_thickness_mm - boolean_overlap_mm
-        ])
-            cube([
-                case_width_mm,
-                boolean_thin_slice_mm,
-                case_bottom_wall_inner_depth_mm - panel_thickness_mm
-                    + boolean_overlap_mm
-            ]);
-    }
-}
-
-/**
- * Case Top Wall
- * Parameters: none.
- * Bounding box: X=[0,W], Y=[H-wall,H], Z=[panel,top depth].
- * Alignment: rear edge follows the table plane; connector notches stay open.
- */
-module case_top_wall() {
-    hull() {
-        translate([
-            0,
-            case_height_mm - wall_thickness_mm,
-            panel_thickness_mm - boolean_overlap_mm
-        ])
-            cube([
-                case_width_mm,
-                boolean_thin_slice_mm,
-                case_top_wall_inner_depth_mm - panel_thickness_mm
-                    + boolean_overlap_mm
-            ]);
-        translate([
-            0,
-            case_height_mm - boolean_thin_slice_mm,
-            panel_thickness_mm - boolean_overlap_mm
-        ])
-            cube([
-                case_width_mm,
-                boolean_thin_slice_mm,
-                case_top_depth_mm - panel_thickness_mm + boolean_overlap_mm
-            ]);
+module case_lid() {
+    difference() {
+        union() {
+            lid_plate();
+            lid_outer_skirt();
+            every_lcd_cell() lcd_mounting_bosses();
+        }
+        every_lcd_cell() lcd_window_cutout();
+        every_lcd_cell() lcd_screw_holes();
+        every_lcd_cell() lcd_screw_head_insets();
+        lid_cable_notches();
     }
 }
 
 // =========================================
-// RASPBERRY PI MOUNT AND ACCESS
+// SOLID-BOTTOM BASE
 // =========================================
 
 /**
- * Raspberry Pi Hole Transform
- * Parameters: none; transforms Pi 4/5 hole coordinates by 90 degrees CCW.
- * Bounding box: the transformed holes occupy a 49x58 mm pitch.
- * Alignment: board USB edge faces +Y and power/video edge faces +X.
+ * Base Floor
+ * Parameters: none; solid bottom supporting the Pi mounting bosses.
+ * Bounding box: [0,0,0] to [base_width,base_depth,floor_thickness].
+ * Alignment: flat Z=0 surface prints directly on the build plate.
  */
-module every_pi_hole() {
-    for (position_mm = pi_hole_positions_mm) {
-        translate([
-            pi_board_x0_mm + pi_board_height_mm - position_mm[1],
-            pi_board_y0_mm + position_mm[0],
-            0
-        ]) children();
+module base_floor() {
+    rounded_rect_prism(
+        base_width_mm,
+        base_depth_mm,
+        floor_thickness_mm,
+        case_corner_radius_mm);
+}
+
+/**
+ * Base Side Wall
+ * Parameter: x_start_mm selects left or right wall.
+ * Bounding box: X wall thickness, full base Y, Z to the sloped lid plane.
+ * Alignment: top edge follows base_top_z_mm(y) exactly.
+ */
+module base_side_wall(x_start_mm) {
+    hull() {
+        translate([x_start_mm, 0, 0])
+            cube([
+                wall_thickness_mm,
+                boolean_thin_slice_mm,
+                base_front_height_mm
+            ]);
+        translate([x_start_mm, base_depth_mm - boolean_thin_slice_mm, 0])
+            cube([
+                wall_thickness_mm,
+                boolean_thin_slice_mm,
+                base_rear_height_mm
+            ]);
+    }
+}
+
+/**
+ * Base Front Wall
+ * Parameters: none; continuous wall containing three small cable notches.
+ * Bounding box: X=[0,W], Y=[0,wall], Z to the sloped lid plane.
+ * Alignment: connects both side walls and the solid floor.
+ */
+module base_front_wall() {
+    hull() {
+        translate([0, 0, 0])
+            cube([
+                base_width_mm,
+                boolean_thin_slice_mm,
+                base_front_height_mm
+            ]);
+        translate([0, wall_thickness_mm - boolean_thin_slice_mm, 0])
+            cube([
+                base_width_mm,
+                boolean_thin_slice_mm,
+                base_top_z_mm(wall_thickness_mm)
+            ]);
+    }
+}
+
+/**
+ * Base Rear Wall
+ * Parameters: none; uninterrupted rear enclosure wall.
+ * Bounding box: X=[0,W], final 5 mm of base Y, Z to rear lid plane.
+ * Alignment: closes the enclosure behind all hardware.
+ */
+module base_rear_wall() {
+    hull() {
+        translate([0, base_depth_mm - wall_thickness_mm, 0])
+            cube([
+                base_width_mm,
+                boolean_thin_slice_mm,
+                base_top_z_mm(base_depth_mm - wall_thickness_mm)
+            ]);
+        translate([0, base_depth_mm - boolean_thin_slice_mm, 0])
+            cube([
+                base_width_mm,
+                boolean_thin_slice_mm,
+                base_rear_height_mm
+            ]);
+    }
+}
+
+/**
+ * Base Walls
+ * Parameters: none; combines and corner-clips all four continuous walls.
+ * Bounding box: base footprint through the variable-height lid plane.
+ * Alignment: rounded outer corner envelope matches floor and lid cap.
+ */
+module base_walls() {
+    intersection() {
+        union() {
+            base_side_wall(0);
+            base_side_wall(base_width_mm - wall_thickness_mm);
+            base_front_wall();
+            base_rear_wall();
+        }
+        rounded_rect_prism(
+            base_width_mm,
+            base_depth_mm,
+            base_rear_height_mm + boolean_overlap_mm,
+            case_corner_radius_mm);
     }
 }
 
 /**
  * Raspberry Pi Mounting Bosses
- * Parameters: none; four self-tapping M2.5 pilot bosses.
- * Bounding box: Z=[panel_thickness,pi_board_plane_z].
- * Alignment: bosses rise only from solid service-panel material, not LCD areas.
+ * Parameters: none; four vertical bosses attached to the solid floor.
+ * Bounding box: Z=[floor_thickness,pi_board_plane_z].
+ * Alignment: Pi lies flat behind the LCD lid with USB right, power/video front.
  */
 module pi_mounting_bosses() {
-    every_pi_hole()
-        translate([0, 0, panel_thickness_mm])
+    for (position_mm = pi_hole_positions_mm) {
+        translate([
+            pi_board_x0_mm + position_mm[0],
+            pi_board_y0_mm + position_mm[1],
+            floor_thickness_mm
+        ])
             cylinder(h = pi_standoff_height_mm, d = pi_boss_diameter_mm);
+    }
 }
 
 /**
  * Raspberry Pi Pilot Holes
- * Parameters: none; subtracts four 2.2 mm blind pilot holes.
- * Bounding box: the final 7 mm of each Pi boss along Z.
- * Alignment: accepts M2.5 self-tapping screws inserted from the open rear.
+ * Parameters: none; subtracts 2.2 mm blind holes for M2.5 screws.
+ * Bounding box: final 7 mm of each Pi mounting boss.
+ * Alignment: screws install from the open base before the lid is fitted.
  */
 module pi_pilot_holes() {
-    every_pi_hole()
+    for (position_mm = pi_hole_positions_mm) {
         translate([
-            0,
-            0,
+            pi_board_x0_mm + position_mm[0],
+            pi_board_y0_mm + position_mm[1],
             pi_board_plane_z_mm - pi_pilot_hole_depth_mm
         ])
             cylinder(
                 h = pi_pilot_hole_depth_mm + boolean_overlap_mm,
                 d = pi_pilot_hole_diameter_mm);
+    }
 }
 
 /**
- * Raspberry Pi Right Access
- * Parameters: none; opens the USB-C/micro-HDMI edge through the right cheek.
- * Bounding box: rear-open notch at +X beside the lower portion of the Pi edge.
- * Alignment: also provides general cable egress and tool access.
+ * Front Cable Notches
+ * Parameters: none; three 10 mm passages for Pi power and video cabling.
+ * Bounding box: localized openings in the top 12 mm of the front wall.
+ * Alignment: open at the sloped rim, avoiding unsupported roofs.
  */
-module pi_right_access_cutout() {
-    translate([
-        case_width_mm - wall_thickness_mm - boolean_overlap_mm,
-        pi_board_y0_mm - pi_access_margin_mm,
-        io_front_lip_depth_mm
-    ])
-        cube([
-            wall_thickness_mm + 2 * boolean_overlap_mm,
-            pi_right_access_height_mm,
-            case_top_depth_mm + boolean_overlap_mm
-        ]);
+module front_cable_notches() {
+    for (x_center_mm = pi_front_cable_x_centers_mm) {
+        translate([
+            x_center_mm - cable_hole_width_mm / 2,
+            -boolean_overlap_mm,
+            base_front_height_mm - cable_notch_depth_mm
+        ])
+            cube([
+                cable_hole_width_mm,
+                wall_thickness_mm + 2 * boolean_overlap_mm,
+                cable_notch_depth_mm
+                    + wall_thickness_mm * tan(lcd_angle_from_table_deg)
+                    + 2 * boolean_overlap_mm
+            ]);
+    }
 }
 
 /**
- * Raspberry Pi Top Access
- * Parameters: none; opens the USB/Ethernet edge through the top wall.
- * Bounding box: rear-open notch at +Y across the transformed Pi width.
- * Alignment: board edge sits pi_edge_gap_mm inside the wall for plug insertion.
+ * Right Cable Notches
+ * Parameters: none; two 10 mm passages for USB/network cable routing.
+ * Bounding box: localized sloped-bottom openings in the right wall top edge.
+ * Alignment: each notch follows the lid plane and stays open during printing.
  */
-module pi_top_access_cutout() {
-    translate([
-        pi_board_x0_mm - pi_access_margin_mm,
-        case_height_mm - wall_thickness_mm - boolean_overlap_mm,
-        io_front_lip_depth_mm
-    ])
-        cube([
-            pi_oriented_width_mm + 2 * pi_access_margin_mm,
-            wall_thickness_mm + 2 * boolean_overlap_mm,
-            case_top_depth_mm + boolean_overlap_mm
-        ]);
-}
-
-/**
- * LCD Connector Access
- * Parameters: none; one broad rear-open notch per physical connector edge.
- * Bounding box: right cheek for landscape, top wall for portrait.
- * Alignment: connector edge is +X landscape and +Y after CCW portrait rotation.
- */
-module lcd_connector_access_cutouts() {
-    if (layout_is_portrait) {
-        for (column = [0 : lcd_columns - 1]) {
-            cell_x_mm = column * (lcd_cell_width_mm + inter_panel_gap_mm);
+module right_cable_notches() {
+    for (y_center_mm = pi_right_cable_y_centers_mm) {
+        y0_mm = y_center_mm - cable_hole_width_mm / 2;
+        y1_mm = y_center_mm + cable_hole_width_mm / 2;
+        hull() {
             translate([
-                cell_x_mm + portrait_connector_access_x0_mm,
-                case_height_mm - wall_thickness_mm - boolean_overlap_mm,
-                io_front_lip_depth_mm
+                base_width_mm - wall_thickness_mm - boolean_overlap_mm,
+                y0_mm,
+                base_top_z_mm(y0_mm) - cable_notch_depth_mm
             ])
                 cube([
-                    portrait_connector_access_width_mm,
                     wall_thickness_mm + 2 * boolean_overlap_mm,
-                    case_top_depth_mm + boolean_overlap_mm
+                    boolean_thin_slice_mm,
+                    cable_notch_depth_mm + boolean_overlap_mm
                 ]);
-        }
-    } else {
-        for (row = [0 : lcd_rows - 1]) {
-            cell_y_mm = row * (lcd_cell_height_mm + inter_panel_gap_mm);
             translate([
-                case_width_mm - wall_thickness_mm - boolean_overlap_mm,
-                cell_y_mm + source_panel_cell_margin_mm
-                    + lcd_connector_access_y0_mm
-                    - lcd_connector_access_margin_mm,
-                io_front_lip_depth_mm
+                base_width_mm - wall_thickness_mm - boolean_overlap_mm,
+                y1_mm - boolean_thin_slice_mm,
+                base_top_z_mm(y1_mm) - cable_notch_depth_mm
             ])
                 cube([
                     wall_thickness_mm + 2 * boolean_overlap_mm,
-                    lcd_connector_access_height_mm
-                        + 2 * lcd_connector_access_margin_mm,
-                    case_top_depth_mm + boolean_overlap_mm
+                    boolean_thin_slice_mm,
+                    cable_notch_depth_mm + boolean_overlap_mm
                 ]);
         }
     }
 }
 
-// =========================================
-// FINAL PRINTABLE ASSEMBLY
-// =========================================
-
 /**
- * LCD Raspberry Pi Case
- * Parameters: none; produces the complete single-piece printable case.
- * Bounding box: [0,0,0] to [case_width,case_height,case_top_depth].
- * Alignment: print the front face at Z=0; the rear remains open.
+ * Complete Solid-Bottom Base
+ * Parameters: none; closed tray with Pi mounting and small cable passages.
+ * Bounding box: [0,0,0] to [base_width,base_depth,base_rear_height].
+ * Alignment: print floor-down; install Pi before pressing on the lid.
  */
-module lcd_raspberry_pi_case() {
+module case_base() {
     difference() {
         union() {
-            case_face_slab();
-            case_side_cheek(0);
-            case_side_cheek(case_width_mm - wall_thickness_mm);
-            case_bottom_wall();
-            case_top_wall();
-            every_lcd_cell() lcd_mounting_bosses();
+            base_floor();
+            base_walls();
             pi_mounting_bosses();
         }
-
-        every_lcd_cell() lcd_window_cutout();
-        every_lcd_cell() lcd_screw_holes();
-        every_lcd_cell() lcd_screw_head_insets();
         pi_pilot_holes();
-        pi_right_access_cutout();
-        pi_top_access_cutout();
-        lcd_connector_access_cutouts();
+        front_cable_notches();
+        right_cable_notches();
     }
 }
 
 // =========================================
-// DEBUG AND VISUALIZATION
+// DEBUG AND ASSEMBLY RENDERS
 // =========================================
+
+/**
+ * Debug LCD Screens
+ * Parameters: none; dark reference planes fill LCD windows in assembly renders.
+ * Bounding box: one nominal window per configured LCD at the lid front.
+ * Alignment: sits just outside printable geometry and is never exported as part.
+ */
+module debug_lcd_screens() {
+    color("MidnightBlue")
+        every_lcd_cell()
+            translate([
+                lcd_window_x0_mm,
+                lcd_window_y0_mm,
+                -debug_envelope_separation_mm
+            ])
+                rounded_rect_prism(
+                    lcd_window_width_mm,
+                    lcd_window_height_mm,
+                    boolean_thin_slice_mm,
+                    feature_corner_radius_mm);
+}
+
+/**
+ * Debug Hardware Envelopes
+ * Parameters: none; displays Pi and LCD PCB locations inside the closed case.
+ * Bounding box: all envelopes remain inside the assembled enclosure.
+ * Alignment: Pi is floor-mounted; LCD PCBs follow the removable lid.
+ */
+module debug_hardware_envelopes() {
+    color("ForestGreen", 0.75)
+        translate([
+            pi_board_x0_mm,
+            pi_board_y0_mm,
+            pi_board_plane_z_mm + debug_envelope_separation_mm
+        ])
+            cube([
+                pi_board_width_mm,
+                pi_board_height_mm,
+                pi_board_thickness_mm
+            ]);
+
+    color("DarkSlateGray", 0.60)
+        assembled_lid_transform()
+            every_lcd_cell()
+                translate([
+                    lcd_pcb_x0_mm,
+                    lcd_pcb_y0_mm,
+                    lid_thickness_mm + lcd_boss_length_mm
+                        + debug_envelope_separation_mm
+                ])
+                    cube([
+                        lcd_pcb_width_mm,
+                        lcd_pcb_height_mm,
+                        lcd_pcb_thickness_mm
+                    ]);
+}
 
 /**
  * Debug Axes
- * Parameter: length_mm controls axis length.
- * Bounding box: axis cylinders extend from the origin in +X/+Y/+Z.
+ * Parameter: length_mm controls axis length from the assembly origin.
+ * Bounding box: cylinders extend along +X, +Y, and +Z.
  * Alignment: red=X, green=Y, blue=Z.
  */
 module debug_axes(length_mm = debug_axis_length_mm) {
@@ -664,79 +799,39 @@ module debug_axes(length_mm = debug_axis_length_mm) {
 }
 
 /**
- * Debug Hardware Envelopes
- * Parameters: none; shows LCD PCBs and the rotated Raspberry Pi board.
- * Bounding box: transparent reference bodies remain inside the case envelope.
- * Alignment: LCDs sit on boss tips; Pi sits on its four service-area bosses.
- */
-module debug_hardware_envelopes() {
-    color("DarkSlateGray", 0.60)
-        every_lcd_cell()
-            translate([
-                lcd_pcb_x0_mm,
-                lcd_pcb_y0_mm,
-                panel_thickness_mm + lcd_boss_length_mm
-                    + debug_envelope_separation_mm
-            ])
-                cube([
-                    lcd_pcb_width_mm,
-                    lcd_pcb_height_mm,
-                    debug_board_thickness_mm
-                ]);
-
-    color("ForestGreen", 0.70)
-        translate([
-            pi_board_x0_mm,
-            pi_board_y0_mm,
-            pi_board_plane_z_mm + debug_envelope_separation_mm
-        ])
-            cube([
-                pi_oriented_width_mm,
-                pi_oriented_height_mm,
-                debug_board_thickness_mm
-            ]);
-
-    color("DarkOrange", 0.35)
-        every_lcd_cell()
-            translate([
-                lcd_connector_edge_x_mm + debug_envelope_separation_mm,
-                lcd_connector_access_y0_mm,
-                panel_thickness_mm + debug_envelope_separation_mm
-            ])
-                cube([
-                    connector_clearance_mm
-                        - 2 * debug_envelope_separation_mm,
-                    lcd_connector_access_height_mm,
-                    debug_connector_envelope_depth_mm
-                ]);
-}
-
-/**
  * Assembly Colored
- * Parameters: none; renders the complete printable case in one opaque color.
- * Bounding box: [0,0,0] to [case_width,case_height,case_top_depth].
- * Alignment: identical to the exported STL with its front at Z=0.
+ * Parameters: none; closed enclosure preview with installed screen references.
+ * Bounding box: base plus the small lid cap overhang.
+ * Alignment: base floor lies on table Z=0 and LCD plane uses selected angle.
  */
 module assembly_colored() {
-    color("LightSlateGray") lcd_raspberry_pi_case();
+    color("SlateGray") case_base();
+    assembled_lid_transform() {
+        color("LightGray") case_lid();
+        debug_lcd_screens();
+    }
 }
 
 /**
  * Assembly X-Ray
- * Parameters: none; overlays LCD, cable, and Pi envelopes on a transparent case.
- * Bounding box: remains within the complete configured case envelope.
- * Alignment: hardware references sit just above their mounting surfaces.
+ * Parameters: none; transparent closed enclosure with internal hardware.
+ * Bounding box: matches the assembled base and lid.
+ * Alignment: verifies Pi is behind the LCD lid and clear of all walls.
  */
 module assembly_xray() {
-    color("SteelBlue", 0.25) lcd_raspberry_pi_case();
+    color("SteelBlue", 0.22) case_base();
+    color("LightSteelBlue", 0.22)
+        assembled_lid_transform() case_lid();
     debug_hardware_envelopes();
+    debug_axes();
 }
 
-if (render_mode == "xray") {
+if (part == "base") {
+    case_base();
+} else if (part == "lid") {
+    case_lid();
+} else if (render_mode == "xray") {
     assembly_xray();
-} else if (render_mode == "debug") {
-    assembly_xray();
-    debug_axes();
 } else {
     assembly_colored();
 }
