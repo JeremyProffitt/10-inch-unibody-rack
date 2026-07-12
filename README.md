@@ -12,6 +12,8 @@ A parametric, unibody 10-inch server rack designed to 3D print in a single piece
 - **Grip bars** and filleted handle cutouts for comfortable carrying
 - **Open back** for ventilation and cable management
 - **Parametric design** - easily adjust rack units, depth, wall thickness
+- **LCD + Raspberry Pi cases** in single/dual landscape and portrait layouts
+- **Parametric viewing angle** with enclosure depth derived from the chosen angle
 
 ## Designs
 
@@ -86,6 +88,54 @@ Panel mount for the [Waveshare 7-inch LCD Display (Model B)](waveshare-7inch-lcd
 **Documentation**: [waveshare-7inch-lcd-display-b.md](waveshare-7inch-lcd-display-b.md)
 
 **Download STL**: [waveshare-7inch-lcd-panel.stl](https://github.com/JeremyProffitt/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-panel.stl)
+
+### Waveshare LCD + Pi Case - Landscape
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-landscape_front.png) | ![Rear](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-landscape_rear.png) |
+
+Single landscape LCD desktop case with the existing panel opening and M3 hole pattern, a 25.4 mm clear right-side cable bay, Pi 4/5 mounting bosses, open I/O access, and a parametric 35-degree wedge stand.
+
+**Documentation**: [waveshare-7inch-lcd-case-landscape.md](waveshare-7inch-lcd-case-landscape.md)
+
+**Download STL**: [waveshare-7inch-lcd-case-landscape.stl](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-landscape.stl)
+
+### Waveshare LCD + Pi Case - Portrait
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-portrait_front.png) | ![Rear](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-portrait_rear.png) |
+
+Single portrait LCD case with a top connector chase for the rotated display, the required right-side service bay, Pi 4/5 access at the top and right, and angle-derived case depth.
+
+**Documentation**: [waveshare-7inch-lcd-case-portrait.md](waveshare-7inch-lcd-case-portrait.md)
+
+**Download STL**: [waveshare-7inch-lcd-case-portrait.stl](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-portrait.stl)
+
+### Waveshare LCD + Pi Case - Dual Portrait Side-by-Side
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-dual-portrait-side-by-side_front.png) | ![Rear](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-dual-portrait-side-by-side_rear.png) |
+
+Two portrait LCDs arranged side by side with a shared top cable chase, one Pi 4/5 mount for dual-display output, broad connector access, and a default 35-degree tabletop angle.
+
+**Documentation**: [waveshare-7inch-lcd-case-dual-portrait-side-by-side.md](waveshare-7inch-lcd-case-dual-portrait-side-by-side.md)
+
+**Download STL**: [waveshare-7inch-lcd-case-dual-portrait-side-by-side.stl](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-dual-portrait-side-by-side.stl)
+
+### Waveshare LCD + Pi Case - Dual Landscape Stacked
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-dual-landscape-stacked_front.png) | ![Rear](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-dual-landscape-stacked_rear.png) |
+
+Two landscape LCDs stacked vertically with individual right-side connector notches, one Pi 4/5 mount, open-back cooling, and a wedge depth derived from the selected screen angle.
+
+**Documentation**: [waveshare-7inch-lcd-case-dual-landscape-stacked.md](waveshare-7inch-lcd-case-dual-landscape-stacked.md)
+
+**Download STL**: [waveshare-7inch-lcd-case-dual-landscape-stacked.stl](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/waveshare-7inch-lcd-case-dual-landscape-stacked.stl)
 
 ## Print Instructions
 

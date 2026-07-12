@@ -17,7 +17,7 @@ for %%f in (*.scad) do (
         echo === Processing %%~nf ===
 
         echo   Building STL...
-        %OPENSCAD% -o %OUTPUT_DIR%\stl\%%~nf.stl "%%f"
+        %OPENSCAD% --export-format binstl -o %OUTPUT_DIR%\stl\%%~nf.stl "%%f"
 
         echo   Rendering front view...
         %OPENSCAD% --render ^

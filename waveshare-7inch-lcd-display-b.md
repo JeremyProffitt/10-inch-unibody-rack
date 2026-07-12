@@ -47,7 +47,7 @@ All dimensions are taken directly from the official Waveshare mechanical drawing
 |---|---|---|
 | Lens OD (glass outline) | 164.28 x 99.17 | ±0.1 |
 | Viewing Area (VA) | 154.58 x 86.42 | ±0.2, 800x480 px |
-| Glass offset from PCB left edge | 8.73 | |
+| VA offset inside lens (bottom) | 8.73 | Derived from lens/VA heights |
 | VA offset inside lens (left) | 3.06 | |
 | VA offset inside lens (top) | 4.02 | |
 
@@ -62,15 +62,40 @@ All dimensions are taken directly from the official Waveshare mechanical drawing
 
 ---
 
-## Connectors (left edge of PCB)
+## Connectors (right edge when installed)
 
-The left edge of the PCB carries the following, from top to bottom (as seen in the back-view drawing):
-- Micro-HDMI input (labeled "Display")
-- Micro-USB (touch + power)
+The official mechanical drawing is a **back view**, where the connectors appear
+on the PCB's left edge. From the installed front/viewer side they are on the
+**right edge**, matching the orientation used by the case designs.
+
+That edge carries the following, from top to bottom in the back-view drawing:
+- Full-size HDMI Type-A input (labeled "Display")
+- Micro-USB (touch and power)
 - 5V / GND test points
 - Backlight on/off switch
 
-Any enclosure must provide clearance on the **left edge of the PCB** for these connectors and cables. The user's rule of thumb for this project is **1 inch (25.4 mm) of cable clearance on each long side** of the display when integrating into a rack.
+### Connector centerlines
+
+The official assembly drawing dimensions the connector/switch centerlines from
+the PCB top edge. The source panel centers the PCB at Y=4.54..128.81 mm:
+
+| Feature | Down from PCB top (mm) | Source-panel Y (mm) |
+|---|---:|---:|
+| HDMI Type-A center | 21.18 | 107.63 |
+| Micro-USB center | 40.18 | 88.63 |
+| Backlight switch center | 53.88 | 74.93 |
+
+The cases reserve source-panel Y=70.00..122.00 mm for the connector envelope
+and enlarge the wall notch by 4.00 mm at each end. The in-plane cable corridor
+extends 25.40 mm from the PCB edge before any Raspberry Pi geometry. These are
+clearance envelopes rather than connector-body dimensions; verify unusually
+large straight plugs against the physical display revision.
+
+Any enclosure must provide at least **1 inch (25.4 mm) of clear cable space on
+the installed right side**. Rotating the LCD 90 degrees counter-clockwise for
+portrait use moves this physical connector edge to the installed top, so the
+portrait cases provide a separate top chase while retaining the requested
+right-side bay.
 
 ---
 
@@ -116,11 +141,18 @@ Any enclosure must provide clearance on the **left edge of the PCB** for these c
 
 ## Usage notes for this project
 
-- **Cable clearance**: Reserve 25.4 mm (1") of horizontal clearance on each side of the PCB for cable routing. Total horizontal envelope: `164.90 + 2*25.4 = 215.7 mm`, which fits the 10" rack clear opening (222.25 mm) with ~3.3 mm margin per side.
+- **Cable clearance**: Reserve at least 25.4 mm (1") beyond the installed right
+  connector edge. The new cases provide 25.4 mm of clear space plus a 5 mm
+  outer wall beyond the compatible 254 mm source-panel boundary.
 - **Minimum rack height**: PCB is 124.27 mm tall. Fits in 3U (133.35 mm) with 9 mm margin, or more comfortably in 4U (177.8 mm).
 - **Mounting screws**: 4 x M3, 8-10 mm long machine screws are compatible (Ø3.25 mm holes).
 - **Print orientation**: Any case must support printing face-down with no supports per project conventions. The viewing window is a simple rectangular cutout; the PCB mounting bosses should be vertical in print.
-- **LCD opening in bezel**: Use `156.70 x 89.10 mm` (bezel-open dimension from the panel drawing) as the minimum viewing window size in any bezel. For a visible-active-area window only, use `154.58 x 86.42 mm` (VA).
+- **LCD opening in bezel**: The vendor bezel-open dimension is
+  `156.70 x 89.10 mm`; visible active area is `154.58 x 86.42 mm`. The existing
+  rack panel and the four compatible case designs intentionally preserve the
+  repository's earlier `156.00 x 89.00 mm` back opening with a 3 mm front
+  bevel. Increase the shared case constants if exact vendor bezel-open size is
+  preferred over compatibility with the existing panel geometry.
 
 ---
 

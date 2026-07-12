@@ -26,7 +26,8 @@ for scad_file in *.scad; do
     echo "=== Processing ${name} ==="
 
     echo "  Building STL..."
-    ${OPENSCAD} -o "${OUTPUT_DIR}/stl/${name}.stl" "${scad_file}"
+    ${OPENSCAD} --export-format binstl \
+        -o "${OUTPUT_DIR}/stl/${name}.stl" "${scad_file}"
 
     echo "  Rendering front view..."
     ${OPENSCAD} --render \
